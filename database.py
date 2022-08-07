@@ -1,5 +1,4 @@
 import sqlite3
-from unittest import result
 
 class Database:
     def __init__(self):
@@ -22,41 +21,34 @@ class UserDataBase(Database):
     def __init__(self) -> None:
         super().__init__()
         self.execute("""CREATE TABLE IF NOT EXISTS users (
-            uid INTEGER NOT NULL,
             username TEXT NOT NULL, 
             password TEXT NOT NULL)""", tuple())
         
-    def hasUserByName(self, username: str) -> bool:
+    def hasUser(self, username: str) -> bool:
         instanceNum = len(self.execute("SELECT * FROM users WHERE username=?", (username,)))
         return instanceNum != 0
     
-    def hasUserById(self, uid: int) -> bool:
-        instanceNum = len(self.execute("SELECT * FROM users WHERE uid=?", (uid,)))
-        return instanceNum != 0
-    
     def addUser(self, username: str, password: str) -> bool:
-        if self.hasUserByName(username):
+        if self.hasUser(username):
             print("User {} already exists.".format(username))
             return False 
-        uid = hash(username)
-        self.execute("INSERT INTO users VALUES (?, ?, ?)", (uid, username, password))
+        self.execute("INSERT INTO users VALUES (?, ?)", (username, password))
         return True
 
     def getUserInfo(self, username: str) -> dict:
-        if not self.hasUserByName(username):
+        if not self.hasUser(username):
             print("User {} does not exist.".format(username))
             return None 
         data = self.execute("SELECT * FROM users WHERE username=?", (username,))[0]
-        return {'uid': data[0], 'username': data[1], 'password': data[2]}
+        return {'username': data[0], 'password': data[1]}
 
     # Only works on file not RAM db
     def getReservedRooms(self, username: str) -> list:
         info = self.getUserInfo(username)
-        uid = info['uid']
-        rooms = self.execute("SELECT * FROM rooms WHERE reservedBy=?", (uid,))
+        rooms = self.execute("SELECT * FROM rooms WHERE reservedBy=?", (info['username'],))
         result = list()
         for room in rooms:
-            result.append({'hotel': room[0], 'rating': room[1], 'roomNum': room[2], 'reservedBy': username})
+            result.append({'hotel': room[0], 'rating': room[1], 'roomNum': room[2], 'reservedBy': room[3]})
         return result
 
 class HotelDatabase(Database):
@@ -66,7 +58,7 @@ class HotelDatabase(Database):
             hotel TEXT NOT NULL, 
             rating REAL NOT NULL,
             roomNum INTEGER NOT NULL,
-            reservedBy INTEGER NOT NULL)""", tuple())
+            reservedBy TEXT NOT NULL)""", tuple())
     
     def hasRoom(self, hotel: str, roomNum: int) -> None:
         instanceNum = len(self.execute("SELECT * FROM rooms WHERE hotel=? AND roomNum=?", (hotel, roomNum)))
@@ -77,23 +69,25 @@ class HotelDatabase(Database):
             print("Hotel room {} {} does not exist.".format(hotel, roomNum))
             return
         taken = self.execute("SELECT reservedBy FROM rooms WHERE hotel=? AND roomNum=?", (hotel, roomNum))
-        return taken[0][0] != -1
+        return taken[0][0] != ''
 
-    def addRoom(self, hotel: str, rating: float, roomNum: int) -> None:
+    def addRoom(self, hotel: str, rating: float, roomNum: int) -> bool:
         if self.hasRoom(hotel, roomNum):
             print("Hotel room {} {} already exist.".format(hotel, roomNum))
-            return
-        self.execute("INSERT INTO rooms VALUES (?, ?, ?, ?)", (hotel, rating, roomNum, -1))
+            return False
+        self.execute("INSERT INTO rooms VALUES (?, ?, ?, ?)", (hotel, rating, roomNum, ''))
+        return True
     
-    def bookRoom(self, hotel: str, roomNum: int, uid: int) -> None:
+    def bookRoom(self, hotel: str, roomNum: int, username: str) -> bool:
         if not self.hasRoom(hotel, roomNum):
             print("Hotel room {} {} does not exist.".format(hotel, roomNum))
-            return
-        self.execute("UPDATE rooms SET reservedBy=? WHERE hotel=? AND roomNum=?", (uid, hotel, roomNum))
+            return False
+        self.execute("UPDATE rooms SET reservedBy=? WHERE hotel=? AND roomNum=?", (username, hotel, roomNum))
+        return True
     
     def getEmptyRoomCount(self, hotel: str) -> int:
         instanceNum = len(self.execute("SELECT * FROM rooms WHERE hotel=?", (hotel,)))
         if instanceNum == 0:
             print("Hotel {} does not exist.".format(hotel))
             return -1
-        return len(self.execute("SELECT * FROM rooms WHERE hotel=? AND reservedBy=?", (hotel, -1)))
+        return len(self.execute("SELECT * FROM rooms WHERE hotel=? AND reservedBy=?", (hotel, '')))
