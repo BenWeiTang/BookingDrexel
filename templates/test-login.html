@@ -8,6 +8,9 @@
 </head>
 <body>
     <h1>Login Page</h1>
+    {% if message %}
+    {{ message }}
+    {% endif %}
     <!-- action to same route on python side, method needs to be post -->
     <form action="/login" method="post">
         <label for="username">Uersname:</label>

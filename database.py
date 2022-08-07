@@ -2,7 +2,8 @@ import sqlite3
 
 class Database:
     def __init__(self):
-        self.conn = sqlite3.connect('BookingDrexel.db')
+        # Be careful with this
+        self.conn = sqlite3.connect('BookingDrexel.db', check_same_thread=False)
         # self.conn = sqlite3.connect(':memory:')
     
     def execute(self, sql: str, parameters: tuple):
@@ -12,7 +13,10 @@ class Database:
             c.execute(sql, parameters)
             result = c.fetchall()
         return result
-        
+    
+    def __del__(self):
+        self.conn.close()
+  
 class UserDataBase(Database):
     def __init__(self) -> None:
         super().__init__()
@@ -29,19 +33,20 @@ class UserDataBase(Database):
         instanceNum = len(self.execute("SELECT * FROM users WHERE uid=?", (uid,)))
         return instanceNum != 0
     
-    def addUser(self, username: str, password: str) -> None:
+    def addUser(self, username: str, password: str) -> bool:
         if self.hasUserByName(username):
             print("User {} already exists.".format(username))
-            return
-        
+            return False 
         uid = hash(username)
         self.execute("INSERT INTO users VALUES (?, ?, ?)", (uid, username, password))
+        return True
 
-    def getUserInfo(self, username: str) -> tuple:
+    def getUserInfo(self, username: str) -> dict:
         if not self.hasUserByName(username):
             print("User {} does not exist.".format(username))
-            return  
-        return self.execute("SELECT * FROM users WHERE username=?", (username,))[0]
+            return None 
+        data = self.execute("SELECT * FROM users WHERE username=?", (username,))[0]
+        return {'uid': data[0], 'username': data[1], 'password': data[2]}
 
     # Only works on file not RAM db
     def getReservedRooms(self, uid: int) -> list:
