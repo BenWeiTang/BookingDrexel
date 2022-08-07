@@ -1,4 +1,5 @@
 import sqlite3
+from unittest import result
 
 class Database:
     def __init__(self):
@@ -49,11 +50,14 @@ class UserDataBase(Database):
         return {'uid': data[0], 'username': data[1], 'password': data[2]}
 
     # Only works on file not RAM db
-    def getReservedRooms(self, uid: int) -> list:
-        if not self.hasUserById(uid):
-            print("Cannot find user with uid {}.".format(uid))
-            return None
-        return self.execute("SELECT * FROM rooms WHERE reservedBy=?", (uid,))
+    def getReservedRooms(self, username: str) -> list:
+        info = self.getUserInfo(username)
+        uid = info['uid']
+        rooms = self.execute("SELECT * FROM rooms WHERE reservedBy=?", (uid,))
+        result = list()
+        for room in rooms:
+            result.append({'hotel': room[0], 'rating': room[1], 'roomNum': room[2], 'reservedBy': username})
+        return result
 
 class HotelDatabase(Database):
     def __init__(self) -> None:

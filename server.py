@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect
+from flask import Flask, render_template, request, redirect, jsonify
 from database import HotelDatabase, UserDataBase
 
 app = Flask(__name__, static_folder='static', static_url_path='')
@@ -37,6 +37,12 @@ def create():
                 message = 'User already exists.'
                 render_template('test-register.html', message=message)
     return render_template('test-register.html', message=message)
+
+@app.route('/api/reserved')
+def reservedRoom():
+    username = str(request.args.get('username')).strip()
+    rooms = str(userDB.getReservedRooms(username))
+    return jsonify(rooms)
 
 if (__name__ == "__main__"):
     app.run(host='127.0.0.1', port=8080, debug=True)
