@@ -91,3 +91,12 @@ class HotelDatabase(Database):
             print("Hotel {} does not exist.".format(hotel))
             return -1
         return len(self.execute("SELECT * FROM rooms WHERE hotel=? AND reservedBy=?", (hotel, '')))
+
+class ReservationDatabase(Database):
+    def __init__(self) -> None:
+        super().__init__()
+        self.execute("""CREATE TABLE IF NOT EXISTS reservations (
+            hotel TEXT NOT NULL, 
+            reservedBy TEXT NOT NULL
+            fromDate TEXT NOT NULL
+            toDate TEXT NOT NULL)""", tuple())
