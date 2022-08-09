@@ -75,8 +75,8 @@ class Database:
         return True
     
     def hotelIntegrityCheck(self, hotel: str, database: str) -> bool:
-        if not self.hasUser(hotel):
-            print("[{}] Hotel {} does not exist in the database.", database, hotel)
+        if not self.hasHotel(hotel):
+            print("[{}] Hotel {} does not exist in the database.".format(database, hotel))
             return False
         return True
 
@@ -89,6 +89,12 @@ class UserDatabase(Database):
             print("[User DB] User {} already exists.".format(username))
             return False 
         self.execute("INSERT INTO users VALUES (?, ?)", (username, password))
+        return True
+    
+    def removeUser(self, useranme: str) -> bool:
+        if not self.userIntegrityCheck(useranme, "User BD"):
+            return False
+        self.execute("DELETE FROM users WHERE username=?", (useranme,))
         return True
 
     def getUserInfo(self, username: str) -> dict:
@@ -115,6 +121,12 @@ class HotelDatabase(Database):
             return False
         self.execute("INSERT INTO rooms VALUES (?, ?, ?, ?)", (hotel, rating, location, roomCount))
         return True
+    
+    def removeHotel(self, hotel: str) -> bool:
+        if not self.hotelIntegrityCheck(hotel, "Hotel BD"):
+            return False
+        self.execute("DELETE FROM rooms WHERE hotel=?", (hotel,))
+        return True
 
 class ReservationDatabase(Database):
     def __init__(self) -> None:
@@ -128,10 +140,33 @@ class ReservationDatabase(Database):
         fromStr = self.dateTupToStr(fromDate)
         toStr = self.dateTupToStr(toDate)
         if not self.hasRoom(hotel, fromDate, toDate):
-            print("Reservation from {} to {} is not availabel.".format(fromStr, toStr))
+            print("[Reservation DB] Reservation from {} to {} is not availabel.".format(fromStr, toStr))
             return False
         self.execute("INSERT INTO reservations VALUES (?, ?, ?, ?)", (hotel, username, fromStr, toStr))
         return True
+    
+    def cancelRoom(self, username: str, hotel: str, fromDate: tuple, toDate:tuple) -> bool:
+        if not self.userIntegrityCheck(username, "Reservation DB"):
+            return False
+        if not self.hotelIntegrityCheck(hotel, "Reservation DB"):
+            return False
+        fromStr = self.dateTupToStr(fromDate)
+        toStr = self.dateTupToStr(toDate)
+        instanceNum = len(self.execute("""SELECT * FROM reservations
+            WHERE hotel=?
+            AND reservedBy=?
+            AND fromDate=?
+            AND toDate=?""", (hotel, username, fromStr, toStr)))
+        if instanceNum == 0:
+            print("[Reservation DB] Cannot found reservation at {} by {} from {} to {}".format(hotel, username, fromStr, toStr))
+            return False
+        self.execute("""DELETE FROM reservations
+            WHERE hotel=?
+            AND reservedBy=?
+            AND fromDate=?
+            AND toDate=?""", (hotel, username, fromStr, toStr))
+        return True
+        
 
 class WishlistDatabase(Database):
     def __init__(self):
@@ -148,18 +183,27 @@ class WishlistDatabase(Database):
         self.execute("INSERT INTO wishlists VALUES (?, ?, ?, ?, ?)", (hotel, username, fromStr, toStr, isAvailable))
         return True 
 
-    def removeWishlist(self, username: str, hotel: str, fromDate: tuple, toDate: tuple) -> None:
+    def removeWishlist(self, username: str, hotel: str, fromDate: tuple, toDate: tuple) -> bool:
         if not self.userIntegrityCheck(username, "Wishlist DB"):
             return False
         if not self.hotelIntegrityCheck(hotel, "Wishlist DB"):
             return False
         fromStr = self.dateTupToStr(fromDate)
         toStr = self.dateTupToStr(toDate)
+        instanceNum = len(self.execute("""SELECT * FROM wishlists
+            WHERE hotel=?
+            AND madeBy=?
+            AND fromDate=?
+            AND toDate=?""", (hotel, username, fromStr, toStr)))
+        if instanceNum == 0:
+            print("[Wishlist DB] Cannot found wishlist at {} by {} from {} to {}".format(hotel, username, fromStr, toStr))
+            return None
         self.execute("""DELETE FROM wishlists 
             WHERE hotel=? 
             AND madeBy=? 
             AND fromDate=? 
             AND toDate=?""", (hotel, username, fromStr, toStr))
+        return True
 
     def refreshWishlist(self, username: str) -> None:
         if not self.userIntegrityCheck(username, "Wishlist DB"):
@@ -176,7 +220,7 @@ class WishlistDatabase(Database):
             AND toDate=?""", (isAvailable, username, wl[0], wl[1], wl[2]))
     
     def getWishList(self, username: str) -> list:
-        if not self.hotelIntegrityCheck(username, "Wishlist DB"):
+        if not self.userIntegrityCheck(username, "Wishlist DB"):
             return False
         self.refreshWishlist(username)
         allWishlists = self.execute("SELECT * FROM wishlists WHERE madeBy=?", (username,))
