@@ -62,47 +62,16 @@ class HotelDatabase(Database):
     
     # Need testing
     def hasHotel(self, hotel: str):
-        pass
+        instanceNum = len(self.execute("SELECT * FROM rooms WHERE hotel=?", (hotel,)))
+        return instanceNum != 0
 
     # Need testing
     def addHotel(self, hotel: str, rating: float, location: str, roomCount: int) -> bool:
-        pass
-    
-    # def hasRoom(self, hotel: str, roomNum: int) -> None:
-    #     instanceNum = len(self.execute("SELECT * FROM rooms WHERE hotel=? AND roomNum=?", (hotel, roomNum)))
-    #     return instanceNum != 0
-    
-    # Internal; no ref
-    # def isRoomTaken(self, hotel: str, roomNum: int) -> bool:
-    #     if not self.hasRoom(hotel, roomNum):
-    #         print("Hotel room {} {} does not exist.".format(hotel, roomNum))
-    #         return
-    #     taken = self.execute("SELECT reservedBy FROM rooms WHERE hotel=? AND roomNum=?", (hotel, roomNum))
-    #     return taken[0][0] != ''
-
-    # Internal; no ref
-    # def addRoom(self, hotel: str, rating: float, roomNum: int) -> bool:
-    #     if self.hasRoom(hotel, roomNum):
-    #         print("Hotel room {} {} already exist.".format(hotel, roomNum))
-    #         return False
-    #     self.execute("INSERT INTO rooms VALUES (?, ?, ?, ?)", (hotel, rating, roomNum, ''))
-    #     return True
-    
-    # Internal; no ref
-    # def bookRoom(self, hotel: str, roomNum: int, username: str) -> bool:
-    #     if not self.hasRoom(hotel, roomNum):
-    #         print("Hotel room {} {} does not exist.".format(hotel, roomNum))
-    #         return False
-    #     self.execute("UPDATE rooms SET reservedBy=? WHERE hotel=? AND roomNum=?", (username, hotel, roomNum))
-    #     return True
-    
-    # Internal; no ref
-    # def getEmptyRoomCount(self, hotel: str) -> int:
-    #     instanceNum = len(self.execute("SELECT * FROM rooms WHERE hotel=?", (hotel,)))
-    #     if instanceNum == 0:
-    #         print("Hotel {} does not exist.".format(hotel))
-    #         return -1
-        # return len(self.execute("SELECT * FROM rooms WHERE hotel=? AND reservedBy=?", (hotel, '')))
+        if self.hasHotel(hotel):
+            print("Hotel {} already exists.".format(hotel))
+            return False
+        self.execute("INSERT INTO rooms VALUES (?, ?, ?, ?)", (hotel, rating, location, roomCount))
+        return True
 
 # Need testing
 class ReservationDatabase(Database):
