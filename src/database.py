@@ -7,6 +7,9 @@ class Database:
         self.conn = sqlite3.connect('BookingDrexel.db', check_same_thread=False)
         # self.conn = sqlite3.connect(':memory:')
     
+    def __del__(self):
+        self.conn.close()
+    
     def execute(self, sql: str, parameters: tuple):
         result = None
         with self.conn:
@@ -15,8 +18,14 @@ class Database:
             result = c.fetchall()
         return result
     
-    def __del__(self):
-        self.conn.close()
+    # Need testing
+    def dateTupToStr(self, tupDate: tuple) -> str:
+        return date(tupDate[0, tupDate[1], tupDate[2]]).isoformat()
+    
+    # Need testing
+    def dateStrToTup(self, strDate: str) -> tuple:
+        result = date.fromisoformat(strDate)
+        return tuple(result.year, result.month, result.day)
   
 class UserDatabase(Database):
     def __init__(self) -> None:
@@ -85,8 +94,8 @@ class ReservationDatabase(Database):
         return self.getEmptyRoomCount(hotel, fromDate, toDate) != 0
 
     def bookRoom(self, hotel: str, username: str, fromDate: tuple, toDate: tuple) -> bool:
-        fromStr = date(fromDate[0], fromDate[1], fromDate[2]).isoformat()
-        toStr = date(toDate[0], toDate[1], toDate[2]).isoformat()
+        fromStr = self.dateTupToStr(fromDate)
+        toStr = self.dateTupToStr(toDate)
         if not self.hasRoom(hotel, fromDate, toDate):
             print("Reservation from {} to {} is not availabel.".format(fromStr, toStr))
             return False
