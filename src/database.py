@@ -114,3 +114,48 @@ class ReservationDatabase(Database):
             if aFrom <= bTo and aTo >= bFrom:
                 targetSlotAvailableCount -= 1
         return targetSlotAvailableCount 
+
+class WishlistDatabase(Database):
+    def __init__(self):
+        super().__init__()
+        self.execute("""CREATE TABLE IF NOT EXISTS wishlists (
+            hotel TEXT NOT NULL,
+            madeBy TEXT NOT NULL,
+            fromDate TEXT NOT NULL,
+            toDate TEXT NOT NULL,
+            available TEXT NOT NULL)""", tuple())
+    
+    def addWishlist(self, username: str, hotel: str, fromDate: tuple, toDate: tuple, rvDB: ReservationDatabase) -> None:
+        fromStr = self.dateTupToStr(fromDate)
+        toStr = self.dateTupToStr(toDate)
+        isAvailable = str(rvDB.hasRoom(hotel, fromDate, toDate))
+        self.execute("INSERT INTO wishlists VALUES (?, ?, ?, ?, ?)", (hotel, username, fromStr, toStr, isAvailable))
+
+    def removeWishlist(self, username: str, hotel: str, fromDate: tuple, toDate: tuple) -> None:
+        fromStr = self.dateTupToStr(fromDate)
+        toStr = self.dateTupToStr(toDate)
+        self.execute("""DELETE FROM wishlists 
+            WHERE hotel=? 
+            AND madeBy=? 
+            AND fromDate=? 
+            AND toDate=?""", (hotel, username, fromStr, toStr))
+
+    def refreshWishlist(self, username: str, rvDB: ReservationDatabase) -> None:
+        allWishlists = self.execute("SELECT hotel, fromDate, toDate FROM wishlists WHERE madeBy=?", (username,))
+        for wl in allWishlists:
+            fromTup = self.dateStrToTup(wl[1])
+            toTup = self.dateStrToTup(wl[2])
+            isAvailable = str(rvDB.hasRoom(wl[0], fromTup, toTup))
+            self.execute("""UPDATE wishlists SET available=?
+            WHERE madeBy=?
+            AND hotel=?
+            AND fromDate=?
+            AND toDate=?""", (isAvailable, username, wl[0], wl[1], wl[2]))
+    
+    def getWishList(self, username: str, rvDB: ReservationDatabase) -> list:
+        self.refreshWishlist(username, rvDB)
+        allWishlists = self.execute("SELECT * FROM wishlists WHERE madeBy=?", (username,))
+        result = list()
+        for wl in allWishlists:
+            result.append({'hotel': wl[0], 'username': wl[1], 'fromDate': wl[2], 'toDate': wl[3], 'available': wl[4]})
+        return result
