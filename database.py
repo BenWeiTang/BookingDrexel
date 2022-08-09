@@ -1,3 +1,4 @@
+from datetime import date
 import sqlite3
 
 class Database:
@@ -81,11 +82,30 @@ class ReservationDatabase(Database):
             fromDate TEXT NOT NULL,
             toDate TEXT NOT NULL)""", tuple())
     
-    def hasRoom(self, db: HotelDatabase, hotel: str, fromDate: str, toDate: str) -> bool:
-        pass
+    def hasRoom(self, hotel: str, fromDate: str, toDate: str) -> bool:
+        return self.getEmptyRoomCount(hotel, fromDate, toDate) != 0
 
-    def bookRoom(self, hotel: str, fromDate: str, toDate: str) -> bool:
-        pass
+    def bookRoom(self, hotel: str, username: str, fromYear: int, fromMonth: int, fromDay: int, toYear: int, toMonth: int, toDay: int) -> bool:
+        fromDate = date.fromisoformat("{}-{}-{}".format(fromYear, fromMonth, fromDay))
+        toDate = date.fromisoformat("{}-{}-{}".format(toYear, toMonth, toDay))
+        fromStr = fromDate.isoformat()
+        toStr = toDate.isoformat()
+        if not self.hasRoom(fromStr, toStr):
+            print("Reservation from {} to {} is not availabel.".format(fromStr, toStr))
+            return False
+        self.execute("INSTER INTO reservations VALUES (?, ?, ?, ?)", (hotel, username, fromStr, toStr))
+        return True
 
-    def getEmptyRoomCount(self, hotel: str) -> int:
-        pass
+    def getEmptyRoomCount(self, hotel: str, fromDate: str, toDate: str) -> int:
+        roomCount = self.execute("SELECT roomCount FROM rooms WHERE hotel=?", (hotel,))[0][0]
+        targetSlotAvailableCount = roomCount
+        aFrom = date.fromisoformat(fromDate)
+        aTo = date.fromisoformat(toDate)
+        allRes = self.execute("SELECT fromDate, toDate FROM reservations WHERE hotel=?", (hotel,))
+        for res in allRes:
+            bFrom = date.fromisoformat(res[0])
+            bTo = date.fromisoformat(res[1])
+            if aFrom < bTo and aTo > bFrom:
+                print("Overlap")
+                targetSlotAvailableCount -= 1
+        return targetSlotAvailableCount 
