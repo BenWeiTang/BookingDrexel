@@ -18,7 +18,7 @@ class Database:
     def __del__(self):
         self.conn.close()
   
-class UserDataBase(Database):
+class UserDatabase(Database):
     def __init__(self) -> None:
         super().__init__()
         self.execute("""CREATE TABLE IF NOT EXISTS users (
