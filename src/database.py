@@ -134,13 +134,22 @@ class WishlistDatabase(Database):
     def __init__(self):
         super().__init__()
     
-    def addWishlist(self, username: str, hotel: str, fromDate: tuple, toDate: tuple) -> None:
+    def addWishlist(self, username: str, hotel: str, fromDate: tuple, toDate: tuple) -> bool:
+        if not self.userIntegrityCheck(username, "Wishlist DB"):
+            return False
+        if not self.hotelIntegrityCheck(hotel, "Wishlist DB"):
+            return False
         fromStr = self.dateTupToStr(fromDate)
         toStr = self.dateTupToStr(toDate)
         isAvailable = str(self.hasRoom(hotel, fromDate, toDate))
         self.execute("INSERT INTO wishlists VALUES (?, ?, ?, ?, ?)", (hotel, username, fromStr, toStr, isAvailable))
+        return True 
 
     def removeWishlist(self, username: str, hotel: str, fromDate: tuple, toDate: tuple) -> None:
+        if not self.userIntegrityCheck(username, "Wishlist DB"):
+            return False
+        if not self.hotelIntegrityCheck(hotel, "Wishlist DB"):
+            return False
         fromStr = self.dateTupToStr(fromDate)
         toStr = self.dateTupToStr(toDate)
         self.execute("""DELETE FROM wishlists 
@@ -150,6 +159,8 @@ class WishlistDatabase(Database):
             AND toDate=?""", (hotel, username, fromStr, toStr))
 
     def refreshWishlist(self, username: str) -> None:
+        if not self.userIntegrityCheck(username, "Wishlist DB"):
+            return False
         allWishlists = self.execute("SELECT hotel, fromDate, toDate FROM wishlists WHERE madeBy=?", (username,))
         for wl in allWishlists:
             fromTup = self.dateStrToTup(wl[1])
@@ -162,6 +173,8 @@ class WishlistDatabase(Database):
             AND toDate=?""", (isAvailable, username, wl[0], wl[1], wl[2]))
     
     def getWishList(self, username: str) -> list:
+        if not self.hotelIntegrityCheck(username, "Wishlist DB"):
+            return False
         self.refreshWishlist(username)
         allWishlists = self.execute("SELECT * FROM wishlists WHERE madeBy=?", (username,))
         result = list()
