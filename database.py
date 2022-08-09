@@ -72,7 +72,6 @@ class HotelDatabase(Database):
         self.execute("INSERT INTO rooms VALUES (?, ?, ?, ?)", (hotel, rating, location, roomCount))
         return True
 
-# Need testing
 class ReservationDatabase(Database):
     def __init__(self) -> None:
         super().__init__()
@@ -82,30 +81,27 @@ class ReservationDatabase(Database):
             fromDate TEXT NOT NULL,
             toDate TEXT NOT NULL)""", tuple())
     
-    def hasRoom(self, hotel: str, fromDate: str, toDate: str) -> bool:
+    def hasRoom(self, hotel: str, fromDate: tuple, toDate: tuple) -> bool:
         return self.getEmptyRoomCount(hotel, fromDate, toDate) != 0
 
-    def bookRoom(self, hotel: str, username: str, fromYear: int, fromMonth: int, fromDay: int, toYear: int, toMonth: int, toDay: int) -> bool:
-        fromDate = date.fromisoformat("{}-{}-{}".format(fromYear, fromMonth, fromDay))
-        toDate = date.fromisoformat("{}-{}-{}".format(toYear, toMonth, toDay))
-        fromStr = fromDate.isoformat()
-        toStr = toDate.isoformat()
-        if not self.hasRoom(fromStr, toStr):
+    def bookRoom(self, hotel: str, username: str, fromDate: tuple, toDate: tuple) -> bool:
+        fromStr = date(fromDate[0], fromDate[1], fromDate[2]).isoformat()
+        toStr = date(toDate[0], toDate[1], toDate[2]).isoformat()
+        if not self.hasRoom(hotel, fromDate, toDate):
             print("Reservation from {} to {} is not availabel.".format(fromStr, toStr))
             return False
-        self.execute("INSTER INTO reservations VALUES (?, ?, ?, ?)", (hotel, username, fromStr, toStr))
+        self.execute("INSERT INTO reservations VALUES (?, ?, ?, ?)", (hotel, username, fromStr, toStr))
         return True
 
-    def getEmptyRoomCount(self, hotel: str, fromDate: str, toDate: str) -> int:
+    def getEmptyRoomCount(self, hotel: str, fromDate: tuple, toDate: tuple) -> int:
         roomCount = self.execute("SELECT roomCount FROM rooms WHERE hotel=?", (hotel,))[0][0]
         targetSlotAvailableCount = roomCount
-        aFrom = date.fromisoformat(fromDate)
-        aTo = date.fromisoformat(toDate)
+        aFrom = date(fromDate[0], fromDate[1], fromDate[2])
+        aTo = date(toDate[0], toDate[1], toDate[2])
         allRes = self.execute("SELECT fromDate, toDate FROM reservations WHERE hotel=?", (hotel,))
         for res in allRes:
             bFrom = date.fromisoformat(res[0])
             bTo = date.fromisoformat(res[1])
-            if aFrom < bTo and aTo > bFrom:
-                print("Overlap")
+            if aFrom <= bTo and aTo >= bFrom:
                 targetSlotAvailableCount -= 1
         return targetSlotAvailableCount 
