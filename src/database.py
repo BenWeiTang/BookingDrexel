@@ -112,7 +112,7 @@ class HotelDatabase(Database):
     
     def addHotel(self, hotel: str, rating: float, location: str, roomCount: int) -> bool:
         if self.hasHotel(hotel):
-            print("Hotel {} already exists.".format(hotel))
+            print("[Hotel DB] Hotel {} already exists.".format(hotel))
             return False
         self.execute("INSERT INTO rooms VALUES (?, ?, ?, ?)", (hotel, rating, location, roomCount))
         return True
