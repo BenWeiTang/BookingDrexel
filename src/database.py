@@ -122,6 +122,10 @@ class ReservationDatabase(Database):
         super().__init__()
     
     def bookRoom(self, username: str, hotel: str, fromDate: tuple, toDate: tuple) -> bool:
+        if not self.userIntegrityCheck(username, "Reservation DB"):
+            return False
+        if not self.hotelIntegrityCheck(hotel, "Reservation DB"):
+            return False
         fromStr = self.dateTupToStr(fromDate)
         toStr = self.dateTupToStr(toDate)
         if not self.hasRoom(hotel, fromDate, toDate):
