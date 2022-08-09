@@ -60,12 +60,10 @@ class HotelDatabase(Database):
             location TEXT NOT NULL,
             roomCount INTEGER NOT NULL)""", tuple())
     
-    # Need testing
     def hasHotel(self, hotel: str):
         instanceNum = len(self.execute("SELECT * FROM rooms WHERE hotel=?", (hotel,)))
         return instanceNum != 0
 
-    # Need testing
     def addHotel(self, hotel: str, rating: float, location: str, roomCount: int) -> bool:
         if self.hasHotel(hotel):
             print("Hotel {} already exists.".format(hotel))
