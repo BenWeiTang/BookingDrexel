@@ -18,14 +18,12 @@ class Database:
             result = c.fetchall()
         return result
     
-    # Need testing
     def dateTupToStr(self, tupDate: tuple) -> str:
-        return date(tupDate[0, tupDate[1], tupDate[2]]).isoformat()
+        return date(tupDate[0], tupDate[1], tupDate[2]).isoformat()
     
-    # Need testing
     def dateStrToTup(self, strDate: str) -> tuple:
         result = date.fromisoformat(strDate)
-        return tuple(result.year, result.month, result.day)
+        return (result.year, result.month, result.day)
   
 class UserDatabase(Database):
     def __init__(self) -> None:
