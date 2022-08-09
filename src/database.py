@@ -121,7 +121,7 @@ class ReservationDatabase(Database):
     def __init__(self) -> None:
         super().__init__()
     
-    def bookRoom(self, hotel: str, username: str, fromDate: tuple, toDate: tuple) -> bool:
+    def bookRoom(self, username: str, hotel: str, fromDate: tuple, toDate: tuple) -> bool:
         fromStr = self.dateTupToStr(fromDate)
         toStr = self.dateTupToStr(toDate)
         if not self.hasRoom(hotel, fromDate, toDate):
