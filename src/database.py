@@ -67,6 +67,18 @@ class Database:
      
     def hasRoom(self, hotel: str, fromDate: tuple, toDate: tuple) -> bool:
         return self.getEmptyRoomCount(hotel, fromDate, toDate) != 0
+    
+    def userIntegrityCheck(self, username: str, database: str) -> bool:
+        if not self.hasUser(username):
+            print("[{}] User {} does not exist in the database.", database, username)
+            return False
+        return True
+    
+    def hotelIntegrityCheck(self, hotel: str, database: str) -> bool:
+        if not self.hasUser(hotel):
+            print("[{}] Hotel {} does not exist in the database.", database, hotel)
+            return False
+        return True
 
 class UserDatabase(Database):
     def __init__(self) -> None:
