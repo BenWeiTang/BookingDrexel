@@ -86,14 +86,13 @@ class UserDatabase(Database):
         
     def addUser(self, username: str, password: str) -> bool:
         if self.hasUser(username):
-            print("User {} already exists.".format(username))
+            print("[User DB] User {} already exists.".format(username))
             return False 
         self.execute("INSERT INTO users VALUES (?, ?)", (username, password))
         return True
 
     def getUserInfo(self, username: str) -> dict:
-        if not self.hasUser(username):
-            print("User {} does not exist.".format(username))
+        if not self.userIntegrityCheck(username, "User DB"):
             return None 
         data = self.execute("SELECT * FROM users WHERE username=?", (username,))[0]
         return {'username': data[0], 'password': data[1]}
