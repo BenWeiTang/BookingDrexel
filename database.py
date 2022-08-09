@@ -57,46 +57,68 @@ class HotelDatabase(Database):
         self.execute("""CREATE TABLE IF NOT EXISTS rooms (
             hotel TEXT NOT NULL, 
             rating REAL NOT NULL,
-            roomNum INTEGER NOT NULL,
-            reservedBy TEXT NOT NULL)""", tuple())
+            location TEXT NOT NULL,
+            roomCount INTEGER NOT NULL)""", tuple())
     
-    def hasRoom(self, hotel: str, roomNum: int) -> None:
-        instanceNum = len(self.execute("SELECT * FROM rooms WHERE hotel=? AND roomNum=?", (hotel, roomNum)))
-        return instanceNum != 0
-    
-    def isRoomTaken(self, hotel: str, roomNum: int) -> bool:
-        if not self.hasRoom(hotel, roomNum):
-            print("Hotel room {} {} does not exist.".format(hotel, roomNum))
-            return
-        taken = self.execute("SELECT reservedBy FROM rooms WHERE hotel=? AND roomNum=?", (hotel, roomNum))
-        return taken[0][0] != ''
+    # Need testing
+    def hasHotel(self, hotel: str):
+        pass
 
-    def addRoom(self, hotel: str, rating: float, roomNum: int) -> bool:
-        if self.hasRoom(hotel, roomNum):
-            print("Hotel room {} {} already exist.".format(hotel, roomNum))
-            return False
-        self.execute("INSERT INTO rooms VALUES (?, ?, ?, ?)", (hotel, rating, roomNum, ''))
-        return True
+    # Need testing
+    def addHotel(self, hotel: str, rating: float, location: str, roomCount: int) -> bool:
+        pass
     
-    def bookRoom(self, hotel: str, roomNum: int, username: str) -> bool:
-        if not self.hasRoom(hotel, roomNum):
-            print("Hotel room {} {} does not exist.".format(hotel, roomNum))
-            return False
-        self.execute("UPDATE rooms SET reservedBy=? WHERE hotel=? AND roomNum=?", (username, hotel, roomNum))
-        return True
+    # def hasRoom(self, hotel: str, roomNum: int) -> None:
+    #     instanceNum = len(self.execute("SELECT * FROM rooms WHERE hotel=? AND roomNum=?", (hotel, roomNum)))
+    #     return instanceNum != 0
     
-    def getEmptyRoomCount(self, hotel: str) -> int:
-        instanceNum = len(self.execute("SELECT * FROM rooms WHERE hotel=?", (hotel,)))
-        if instanceNum == 0:
-            print("Hotel {} does not exist.".format(hotel))
-            return -1
-        return len(self.execute("SELECT * FROM rooms WHERE hotel=? AND reservedBy=?", (hotel, '')))
+    # Internal; no ref
+    # def isRoomTaken(self, hotel: str, roomNum: int) -> bool:
+    #     if not self.hasRoom(hotel, roomNum):
+    #         print("Hotel room {} {} does not exist.".format(hotel, roomNum))
+    #         return
+    #     taken = self.execute("SELECT reservedBy FROM rooms WHERE hotel=? AND roomNum=?", (hotel, roomNum))
+    #     return taken[0][0] != ''
 
+    # Internal; no ref
+    # def addRoom(self, hotel: str, rating: float, roomNum: int) -> bool:
+    #     if self.hasRoom(hotel, roomNum):
+    #         print("Hotel room {} {} already exist.".format(hotel, roomNum))
+    #         return False
+    #     self.execute("INSERT INTO rooms VALUES (?, ?, ?, ?)", (hotel, rating, roomNum, ''))
+    #     return True
+    
+    # Internal; no ref
+    # def bookRoom(self, hotel: str, roomNum: int, username: str) -> bool:
+    #     if not self.hasRoom(hotel, roomNum):
+    #         print("Hotel room {} {} does not exist.".format(hotel, roomNum))
+    #         return False
+    #     self.execute("UPDATE rooms SET reservedBy=? WHERE hotel=? AND roomNum=?", (username, hotel, roomNum))
+    #     return True
+    
+    # Internal; no ref
+    # def getEmptyRoomCount(self, hotel: str) -> int:
+    #     instanceNum = len(self.execute("SELECT * FROM rooms WHERE hotel=?", (hotel,)))
+    #     if instanceNum == 0:
+    #         print("Hotel {} does not exist.".format(hotel))
+    #         return -1
+        # return len(self.execute("SELECT * FROM rooms WHERE hotel=? AND reservedBy=?", (hotel, '')))
+
+# Need testing
 class ReservationDatabase(Database):
     def __init__(self) -> None:
         super().__init__()
         self.execute("""CREATE TABLE IF NOT EXISTS reservations (
-            hotel TEXT NOT NULL, 
-            reservedBy TEXT NOT NULL
-            fromDate TEXT NOT NULL
+            hotel TEXT NOT NULL,
+            reservedBy TEXT NOT NULL,
+            fromDate TEXT NOT NULL,
             toDate TEXT NOT NULL)""", tuple())
+    
+    def hasRoom(self, db: HotelDatabase, hotel: str, fromDate: str, toDate: str) -> bool:
+        pass
+
+    def bookRoom(self, hotel: str, fromDate: str, toDate: str) -> bool:
+        pass
+
+    def getEmptyRoomCount(self, hotel: str) -> int:
+        pass
