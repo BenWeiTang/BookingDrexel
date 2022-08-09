@@ -1,3 +1,4 @@
+from datetime import date
 import sqlite3
 
 class Database:
@@ -57,37 +58,50 @@ class HotelDatabase(Database):
         self.execute("""CREATE TABLE IF NOT EXISTS rooms (
             hotel TEXT NOT NULL, 
             rating REAL NOT NULL,
-            roomNum INTEGER NOT NULL,
-            reservedBy TEXT NOT NULL)""", tuple())
+            location TEXT NOT NULL,
+            roomCount INTEGER NOT NULL)""", tuple())
     
-    def hasRoom(self, hotel: str, roomNum: int) -> None:
-        instanceNum = len(self.execute("SELECT * FROM rooms WHERE hotel=? AND roomNum=?", (hotel, roomNum)))
-        return instanceNum != 0
-    
-    def isRoomTaken(self, hotel: str, roomNum: int) -> bool:
-        if not self.hasRoom(hotel, roomNum):
-            print("Hotel room {} {} does not exist.".format(hotel, roomNum))
-            return
-        taken = self.execute("SELECT reservedBy FROM rooms WHERE hotel=? AND roomNum=?", (hotel, roomNum))
-        return taken[0][0] != ''
-
-    def addRoom(self, hotel: str, rating: float, roomNum: int) -> bool:
-        if self.hasRoom(hotel, roomNum):
-            print("Hotel room {} {} already exist.".format(hotel, roomNum))
-            return False
-        self.execute("INSERT INTO rooms VALUES (?, ?, ?, ?)", (hotel, rating, roomNum, ''))
-        return True
-    
-    def bookRoom(self, hotel: str, roomNum: int, username: str) -> bool:
-        if not self.hasRoom(hotel, roomNum):
-            print("Hotel room {} {} does not exist.".format(hotel, roomNum))
-            return False
-        self.execute("UPDATE rooms SET reservedBy=? WHERE hotel=? AND roomNum=?", (username, hotel, roomNum))
-        return True
-    
-    def getEmptyRoomCount(self, hotel: str) -> int:
+    def hasHotel(self, hotel: str):
         instanceNum = len(self.execute("SELECT * FROM rooms WHERE hotel=?", (hotel,)))
-        if instanceNum == 0:
-            print("Hotel {} does not exist.".format(hotel))
-            return -1
-        return len(self.execute("SELECT * FROM rooms WHERE hotel=? AND reservedBy=?", (hotel, '')))
+        return instanceNum != 0
+
+    def addHotel(self, hotel: str, rating: float, location: str, roomCount: int) -> bool:
+        if self.hasHotel(hotel):
+            print("Hotel {} already exists.".format(hotel))
+            return False
+        self.execute("INSERT INTO rooms VALUES (?, ?, ?, ?)", (hotel, rating, location, roomCount))
+        return True
+
+class ReservationDatabase(Database):
+    def __init__(self) -> None:
+        super().__init__()
+        self.execute("""CREATE TABLE IF NOT EXISTS reservations (
+            hotel TEXT NOT NULL,
+            reservedBy TEXT NOT NULL,
+            fromDate TEXT NOT NULL,
+            toDate TEXT NOT NULL)""", tuple())
+    
+    def hasRoom(self, hotel: str, fromDate: tuple, toDate: tuple) -> bool:
+        return self.getEmptyRoomCount(hotel, fromDate, toDate) != 0
+
+    def bookRoom(self, hotel: str, username: str, fromDate: tuple, toDate: tuple) -> bool:
+        fromStr = date(fromDate[0], fromDate[1], fromDate[2]).isoformat()
+        toStr = date(toDate[0], toDate[1], toDate[2]).isoformat()
+        if not self.hasRoom(hotel, fromDate, toDate):
+            print("Reservation from {} to {} is not availabel.".format(fromStr, toStr))
+            return False
+        self.execute("INSERT INTO reservations VALUES (?, ?, ?, ?)", (hotel, username, fromStr, toStr))
+        return True
+
+    def getEmptyRoomCount(self, hotel: str, fromDate: tuple, toDate: tuple) -> int:
+        roomCount = self.execute("SELECT roomCount FROM rooms WHERE hotel=?", (hotel,))[0][0]
+        targetSlotAvailableCount = roomCount
+        aFrom = date(fromDate[0], fromDate[1], fromDate[2])
+        aTo = date(toDate[0], toDate[1], toDate[2])
+        allRes = self.execute("SELECT fromDate, toDate FROM reservations WHERE hotel=?", (hotel,))
+        for res in allRes:
+            bFrom = date.fromisoformat(res[0])
+            bTo = date.fromisoformat(res[1])
+            if aFrom <= bTo and aTo >= bFrom:
+                targetSlotAvailableCount -= 1
+        return targetSlotAvailableCount 
