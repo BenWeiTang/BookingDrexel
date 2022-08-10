@@ -9,6 +9,10 @@ hotelDB = HotelDatabase()
 def index():
     return '<h1>HOME</h>'
 
+@app.route('/welcome', methods=['GET', 'POST'])
+def welcome():
+    return render_template('welcome.html')
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     message = None
