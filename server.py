@@ -1,8 +1,8 @@
 from flask import Flask, render_template, request, redirect, jsonify
-from database import HotelDatabase, UserDataBase
+from src.database import HotelDatabase, UserDatabase
 
 app = Flask(__name__, static_folder='static', static_url_path='')
-userDB = UserDataBase()
+userDB = UserDatabase()
 hotelDB = HotelDatabase()
 
 @app.route('/')
