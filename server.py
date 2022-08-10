@@ -21,7 +21,7 @@ def login():
                 message = 'User IS in database.'
             else:
                 message = 'User is NOT in database.'
-    return render_template('test-login.html', message=message)
+    return render_template('login.html', message=message)
 
 @app.route('/register', methods=['GET', 'POST'])
 def create():
@@ -35,8 +35,8 @@ def create():
                 return redirect('/login')
             else:
                 message = 'User already exists.'
-                render_template('test-register.html', message=message)
-    return render_template('test-register.html', message=message)
+                render_template('register.html', message=message)
+    return render_template('register.html', message=message)
 
 @app.route('/api/reserved')
 def reservedRoom():
