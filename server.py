@@ -7,7 +7,7 @@ hotelDB = HotelDatabase()
 
 @app.route('/')
 def index():
-    return '<h1>HOME</h>'
+    return redirect('/welcome')
 
 @app.route('/welcome', methods=['GET', 'POST'])
 def welcome():
