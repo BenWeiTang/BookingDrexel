@@ -64,6 +64,9 @@ def create():
 def logout():
     if 'username' in session:
         session.pop('username', None)
+        session.pop('hotel', None)
+        session.pop('fromDate', None)
+        session.pop('toDate', None)
     return redirect('/')
 
 @app.route('/api/reserved')
