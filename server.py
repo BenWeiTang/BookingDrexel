@@ -12,10 +12,23 @@ def index():
 
 @app.route('/welcome', methods=['GET', 'POST'])
 def welcome():
-    message = None
-    if 'username' in session:
-        message = session['username']
-    return render_template('welcome.html', message=message)
+    if request.method == 'POST':
+        # These input fields must be required on the html side
+        # Even if user isn't loggded in, the chosen hotel and from-to dates should be stored in session
+        session['hotel'] = request.form['hotel']
+        session['fromDate'] = request.form['fromDate']
+        session['toDate'] = request.form['toDate']
+        if 'username' in session:
+            # TODO: Change to render a different template page
+            return render_template('welcome.html')
+        else:
+            return redirect('/login')
+    else:
+        username = session['username'] if 'username' in session else None
+        hotel = session['hotel'] if 'hotel' in session else None
+        fromDate = session['fromDate'] if 'fromDate' in session else None
+        toDate = session['toDate'] if 'toDate' in session else None
+        return render_template('welcome.html', username=username, hotel=hotel, fromDate=fromDate, toDate=toDate)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
