@@ -1,7 +1,8 @@
-from flask import Flask, render_template, request, redirect, jsonify
+from flask import Flask, render_template, request, redirect, jsonify, session
 from src.database import HotelDatabase, UserDatabase
 
 app = Flask(__name__, static_folder='static', static_url_path='')
+app.secret_key = b'8fc4e6768109ca56d4314b2f540ac0fafabaa1d9019252d472888856707a218e'
 userDB = UserDatabase()
 hotelDB = HotelDatabase()
 
@@ -11,7 +12,10 @@ def index():
 
 @app.route('/welcome', methods=['GET', 'POST'])
 def welcome():
-    return render_template('welcome.html')
+    message = None
+    if 'username' in session:
+        message = session['username']
+    return render_template('welcome.html', message=message)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -23,6 +27,7 @@ def login():
             userInfo = userDB.getUserInfo(username)
             if userInfo is not None and typedPassword == userInfo['password']:
                 message = 'User IS in database.'
+                session['username'] = userInfo
             else:
                 message = 'User is NOT in database.'
     return render_template('login.html', message=message)
@@ -41,6 +46,12 @@ def create():
                 message = 'User already exists.'
                 render_template('register.html', message=message)
     return render_template('register.html', message=message)
+
+@app.route('/logout')
+def logout():
+    if 'username' in session:
+        session.pop('username', None)
+    return redirect('/')
 
 @app.route('/api/reserved')
 def reservedRoom():
