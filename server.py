@@ -39,8 +39,10 @@ def login():
         if username and typedPassword:
             userInfo = userDB.getUserInfo(username)
             if userInfo is not None and typedPassword == userInfo['password']:
+                # TODO: might wanna remove this message
                 message = 'User IS in database.'
-                session['username'] = userInfo
+                session['username'] = userInfo['username']
+                print("User {} just logged in.".format(userInfo['username']))
             else:
                 message = 'User is NOT in database.'
     return render_template('login.html', message=message)
