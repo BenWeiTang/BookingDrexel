@@ -70,7 +70,7 @@ class Database:
     
     def userIntegrityCheck(self, username: str, database: str) -> bool:
         if not self.hasUser(username):
-            print("[{}] User {} does not exist in the database.", database, username)
+            print("[{}] User {} does not exist in the database.".format(database, username))
             return False
         return True
     
