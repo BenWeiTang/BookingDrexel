@@ -84,7 +84,11 @@ def availableRoom():
     hotel = str(hotel).strip() if hotel is not None else None
     fromDate = request.args.get('fromDate').strip('-')
     toDate = request.args.get('toDate').strip('-')
+    maxPrice = request.args.get('maxPrice')
+    maxPrice = int(maxPrice) if maxPrice is not None else None
     result = hotelDB.getAvailableHotelsFromTo(hotel, fromDate, toDate)
+    if maxPrice is not None:
+        result = list(filter(lambda h : h['price'] <= maxPrice, result))
     return jsonify(result)
 
 if (__name__ == "__main__"):
