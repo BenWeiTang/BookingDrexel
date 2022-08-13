@@ -27,12 +27,79 @@
               <a class="nav-link mx-2" href="#!"><i class="fas fa-heart pe-2"></i>Trips</a>
             </li>
             <li class="nav-item ms-3">
-              <a class="btn btn-warning my-2 my-sm-0" href="http://127.0.0.1:8080/login">Sign in</a>
+              <a class="btn btn-warning btn-sm my-2 my-sm-0" href="http://127.0.0.1:8080/login">Sign in</a>
             </li>
           </ul>
         </div>
       </div>
     </nav>
+
+    <div class="container">
+		  <p class="searchText"><strong>Search For Hotel Rooms In Drexel Campus</strong></p>
+
+	  	<!--First Row-->
+      <div class="row">
+        <div class="col-sm">
+          <select class="browser-default custom-select mb-4" id="select">
+            <option value="0">Where do you want to go?</option>
+            <option value="1">Market Street</option>
+            <option value="2">Chestnut Street</option>
+            <option value="3">Race Street</option>
+          </select>
+        </div>
+
+        <div class="col-sm">
+          From: <input type="date" id="from-date" onchange="handler(event)">
+        </div>
+
+        <div class="col-sm">
+          To: <input type="date" id="from-date">
+        </div>
+
+        
+
+        <div class="col-sm">
+          <select class="browser-default custom-select mb-4" id="select">
+            <option value="0">Kids (0-14)</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+          </select>
+        </div>
+
+        <div class="col-sm">
+          <select class="browser-default custom-select mb-4" id="select">
+            <option value="0">Adults (15+)</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+          </select>
+        </div>
+
+        <div class="col-sm">
+        <a href="#" class="btn btn-primary btn-sm float-right col-sm">Search</a>
+      </div>
+		  </div>
+    </div>
+
+    <!--
+    <header class="masthead text-center">
+      <div class="container d-flex align-items-center flex-column">
+          Masthead Avatar Image
+          <img class="masthead-avatar mb-5" src="assets/img/avataaars.svg" alt="..." />
+          Masthead Heading
+          <h1 class="masthead-heading text-uppercase mb-0">Booking.drexel</h1>
+          Icon Divider
+          <div class="divider-custom divider-light">
+              <div class="divider-custom-line"></div>
+              <div class="divider-custom-icon"><i class="fas fa-star"></i></div>
+              <div class="divider-custom-line"></div>
+          </div>
+          Masthead Subheading
+          <p class="masthead-subheading font-weight-light mb-0">Your guide to your stay in Drexel University</p>
+      </div>
+  </header>
+    -->
 
     <!-- example of how to use url_for() -->
     <!-- <img src="{{ url_for('static', filename='/img/doge.png') }}" alt=""> -->
