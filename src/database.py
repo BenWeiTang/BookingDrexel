@@ -13,7 +13,8 @@ class Database:
             hotel TEXT NOT NULL, 
             rating REAL NOT NULL,
             location TEXT NOT NULL,
-            roomCount INTEGER NOT NULL)""", tuple())
+            roomCount INTEGER NOT NULL,
+            price INTEGER NOT NULL)""", tuple())
         self.execute("""CREATE TABLE IF NOT EXISTS reservations (
             hotel TEXT NOT NULL,
             reservedBy TEXT NOT NULL,
@@ -103,23 +104,26 @@ class UserDatabase(Database):
         data = self.execute("SELECT * FROM users WHERE username=?", (username,))[0]
         return {'username': data[0], 'password': data[1]}
 
-    # Only works on file not RAM db
     def getReservedRooms(self, username: str) -> list:
-        rooms = self.execute("SELECT * FROM rooms WHERE reservedBy=?", (username,))
+        rooms = self.execute("SELECT hotel, fromDate, toDate FROM reservations WHERE reservedBy=?", (username,))
         result = list()
         for room in rooms:
-            result.append({'hotel': room[0], 'rating': room[1], 'location': room[2]})
+            hotel = room[0]
+            fromDate = room[1]
+            toDate = room[2]
+            rating, location, price = self.execute("SELECT rating, location, price FROM rooms WHERE hotel=?", (hotel,))[0]
+            result.append({'hotel': hotel, 'rating': rating, 'location': location, 'price': price, 'fromDate': fromDate, 'toDate': toDate})
         return result
 
 class HotelDatabase(Database):
     def __init__(self) -> None:
         super().__init__()
     
-    def addHotel(self, hotel: str, rating: float, location: str, roomCount: int) -> bool:
+    def addHotel(self, hotel: str, rating: float, location: str, roomCount: int, price: int) -> bool:
         if self.hasHotel(hotel):
             print("[Hotel DB] Hotel {} already exists.".format(hotel))
             return False
-        self.execute("INSERT INTO rooms VALUES (?, ?, ?, ?)", (hotel, rating, location, roomCount))
+        self.execute("INSERT INTO rooms VALUES (?, ?, ?, ?, ?)", (hotel, rating, location, roomCount, price))
         return True
     
     def removeHotel(self, hotel: str) -> bool:
@@ -132,13 +136,21 @@ class HotelDatabase(Database):
         availableHotels = []
         hotelInfos = None
         if hotel is None:
-            hotelInfos = self.execute("SELECT hotel, rating, location FROM rooms", tuple())
+            hotelInfos = self.execute("SELECT hotel, rating, location, price FROM rooms", tuple())
         else:
-            hotelInfos = self.execute("SELECT hotel, rating, location FROM rooms WHERE hotel=?", (hotel,))
+            hotelInfos = self.execute("SELECT hotel, rating, location, price FROM rooms WHERE hotel=?", (hotel,))
         for info in hotelInfos:
             if self.hasRoom(info[0], fromDate, toDate):
-                availableHotels.append({'hotel': info[0], 'rating': info[1], 'location': info[2]})
+                availableHotels.append({'hotel': info[0], 'rating': info[1], 'location': info[2], 'price': info[3]})
         return availableHotels
+    
+    def addDefaultHotels(self):
+        self.addHotel('Cornerstone Bed and Breakfast Philadelphia', 4.8, '3300 Baring St, Philadelphia, PA 19104', 3, 199)
+        self.addHotel('Akwaaba Philadelphia', 4.8, '3709 Baring St, Philadelphia, PA 19104', 3, 205)
+        self.addHotel('Sheraton Philadelphia University City Hotel', 4.1, '3549 Chestnut St, Philadelphia, PA 19104', 20, 170)
+        self.addHotel('The Study at University City', 4.6, '20 S 33rd St, Philadelphia, PA 19104', 10, 203)
+        self.addHotel('The Inn at Penn, a Hilton Hotel', 4.5, '3600 Sansom St, Philadelphia, PA 19104', 20, 199)
+        self.addHotel('AKA University City', 4.5, '2929 Walnut St, Philadelphia, PA 19104', 15, 301)
 
 class ReservationDatabase(Database):
     def __init__(self) -> None:
@@ -238,5 +250,6 @@ class WishlistDatabase(Database):
         allWishlists = self.execute("SELECT * FROM wishlists WHERE madeBy=?", (username,))
         result = list()
         for wl in allWishlists:
-            result.append({'hotel': wl[0], 'username': wl[1], 'fromDate': wl[2], 'toDate': wl[3], 'available': wl[4]})
+            price = self.execute("SELECT price FROM rooms WHERE hotel=?", (wl[0],))[0][0]
+            result.append({'hotel': wl[0], 'username': wl[1], 'fromDate': wl[2], 'toDate': wl[3], 'available': wl[4], 'price': price})
         return result
