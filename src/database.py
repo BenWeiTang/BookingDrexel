@@ -127,6 +127,18 @@ class HotelDatabase(Database):
             return False
         self.execute("DELETE FROM rooms WHERE hotel=?", (hotel,))
         return True
+    
+    def getAvailableHotelsFromTo(self, hotel: str, fromDate: tuple, toDate: tuple) -> list:
+        availableHotels = []
+        hotelInfos = None
+        if hotel is None:
+            hotelInfos = self.execute("SELECT hotel, rating, location FROM rooms", tuple())
+        else:
+            hotelInfos = self.execute("SELECT hotel, rating, location FROM rooms WHERE hotel=?", (hotel,))
+        for info in hotelInfos:
+            if self.hasRoom(info[0], fromDate, toDate):
+                availableHotels.append({'hotel': info[0], 'rating': info[1], 'location': info[2]})
+        return availableHotels
 
 class ReservationDatabase(Database):
     def __init__(self) -> None:
@@ -140,7 +152,7 @@ class ReservationDatabase(Database):
         fromStr = self.dateTupToStr(fromDate)
         toStr = self.dateTupToStr(toDate)
         if not self.hasRoom(hotel, fromDate, toDate):
-            print("[Reservation DB] Reservation from {} to {} is not availabel.".format(fromStr, toStr))
+            print("[Reservation DB] Reservation from {} to {} is not available.".format(fromStr, toStr))
             return False
         self.execute("INSERT INTO reservations VALUES (?, ?, ?, ?)", (hotel, username, fromStr, toStr))
         return True

@@ -1,10 +1,12 @@
 from flask import Flask, render_template, request, redirect, jsonify, session
-from src.database import HotelDatabase, UserDatabase
+from src.database import HotelDatabase, ReservationDatabase, UserDatabase, WishlistDatabase
 
 app = Flask(__name__, static_folder='static', static_url_path='')
 app.secret_key = b'8fc4e6768109ca56d4314b2f540ac0fafabaa1d9019252d472888856707a218e'
 userDB = UserDatabase()
 hotelDB = HotelDatabase()
+reservationDB = ReservationDatabase()
+wishlistDB = WishlistDatabase()
 
 @app.route('/')
 def index():
@@ -75,6 +77,15 @@ def logout():
 def reservedRoom():
     username = str(request.args.get('username')).strip()
     return jsonify(userDB.getReservedRooms(username))
+
+@app.route('/api/available')
+def availableRoom():
+    hotel = request.args.get('hotel')
+    hotel = str(hotel).strip() if hotel is not None else None
+    fromDate = request.args.get('fromDate').strip('-')
+    toDate = request.args.get('toDate').strip('-')
+    result = hotelDB.getAvailableHotelsFromTo(hotel, fromDate, toDate)
+    return jsonify(result)
 
 if (__name__ == "__main__"):
     app.run(host='127.0.0.1', port=8080, debug=True)
