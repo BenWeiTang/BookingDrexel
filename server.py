@@ -49,7 +49,7 @@ def login():
                 session['username'] = userInfo['username']
                 return redirect('/welcome')
             else:
-                message = 'User is NOT in database.'
+                message = 'Username or password incorrect.'
     return render_template('login.html', message=message)
 
 @app.route('/register', methods=['GET', 'POST'])
