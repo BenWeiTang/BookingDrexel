@@ -56,15 +56,15 @@
           </div>
 
           <div class="col-sm">
-            From: <input type="date" min="2022-09-01" max="2023-09-01" id="from-date" onchange="toDateHandler(event)">
+            From: <input type="date" name="fromDate" min="2022-09-01" max="2023-09-01" id="from-date" onchange="toDateHandler(event)">
           </div>
 
           <div class="col-sm">
-            To: <input type="date" min="2022-09-01" max="2023-09-01" id="to-date">
+            To: <input type="date" name="toDate" min="2022-09-01" max="2023-09-01" id="to-date">
           </div>
 
           <div class="col-sm">
-            <select class="browser-default custom-select mb-4" id="select">
+            <select class="browser-default custom-select mb-4" id="select" name="kids">
               <option value="0">Kids (0-14)</option>
               <option value="1">1</option>
               <option value="2">2</option>
@@ -73,7 +73,7 @@
           </div>
 
           <div class="col-sm">
-            <select class="browser-default custom-select mb-4" id="select">
+            <select class="browser-default custom-select mb-4" id="select" name="adults">
               <option value="0">Adults (15+)</option>
               <option value="1">1</option>
               <option value="2">2</option>
