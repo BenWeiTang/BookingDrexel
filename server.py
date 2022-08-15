@@ -35,7 +35,8 @@ def welcome():
         hotel = session['hotel'] if 'hotel' in session else None
         fromDate = session['fromDate'] if 'fromDate' in session else None
         toDate = session['toDate'] if 'toDate' in session else None
-        return render_template('welcome.html', username=username, hotel=hotel, fromDate=fromDate, toDate=toDate)
+        allHotels = hotelDB.getAllHotelNames()
+        return render_template('welcome.html', allHotels= allHotels, username=username, hotel=hotel, fromDate=fromDate, toDate=toDate)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
