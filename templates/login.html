@@ -21,6 +21,11 @@
 
     <div class="login">
         <h2>Sign in</h2>
+        <div style="color: red;">
+        {% if message %}
+        {{ message }}
+        {% endif %}
+        </div>
         <form action="/login" method="post">
             <input type="text" name="username" placeholder="Username" required="required" />
             <input type="password" name="password" placeholder="Password" required="required" />
