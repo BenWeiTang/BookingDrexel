@@ -7,6 +7,7 @@ userDB = UserDatabase()
 hotelDB = HotelDatabase()
 reservationDB = ReservationDatabase()
 wishlistDB = WishlistDatabase()
+hotelDB.addDefaultHotels()
 
 @app.route('/')
 def index():
