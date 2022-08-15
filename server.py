@@ -47,6 +47,7 @@ def login():
             userInfo = userDB.getUserInfo(username)
             if userInfo is not None and typedPassword == userInfo['password']:
                 session['username'] = userInfo['username']
+                return redirect('/welcome')
             else:
                 message = 'User is NOT in database.'
     return render_template('login.html', message=message)
