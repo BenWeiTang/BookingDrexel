@@ -12,6 +12,11 @@ wishlistDB = WishlistDatabase()
 def index():
     return redirect('/welcome')
 
+@app.route('/search', methods=['GET', 'POST'])
+def search():
+    return render_template('search.html')
+
+
 @app.route('/welcome', methods=['GET', 'POST'])
 def welcome():
     if request.method == 'POST':
