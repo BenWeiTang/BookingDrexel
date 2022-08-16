@@ -151,6 +151,10 @@ class HotelDatabase(Database):
         self.addHotel('The Study at University City', 4.6, '20 S 33rd St, Philadelphia, PA 19104', 10, 203)
         self.addHotel('The Inn at Penn, a Hilton Hotel', 4.5, '3600 Sansom St, Philadelphia, PA 19104', 20, 199)
         self.addHotel('AKA University City', 4.5, '2929 Walnut St, Philadelphia, PA 19104', 15, 301)
+    
+    def getAllHotelNames(self) -> list:
+        result = list(map(lambda h: h[0], self.execute("SELECT hotel FROM rooms", tuple())))
+        return result
 
 class ReservationDatabase(Database):
     def __init__(self) -> None:
