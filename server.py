@@ -31,8 +31,7 @@ def welcome():
         session['fromDate'] = request.form['fromDate']
         session['toDate'] = request.form['toDate']
         if 'username' in session:
-            # TODO: Change to render a different template page
-            return render_template('welcome.html')
+            return redirect('/search')
         else:
             return redirect('/login')
     else:
@@ -72,6 +71,10 @@ def create():
                 message = 'User already exists.'
                 render_template('register.html', message=message)
     return render_template('register.html', message=message)
+
+@app.route('/search')
+def searchWishlist():
+    return render_template('search.html')
 
 @app.route('/logout')
 def logout():
