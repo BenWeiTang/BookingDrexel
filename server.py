@@ -1,3 +1,4 @@
+import json
 from flask import Flask, render_template, request, redirect, jsonify, session
 from src.database import HotelDatabase, ReservationDatabase, UserDatabase, WishlistDatabase
 
@@ -62,7 +63,11 @@ def create():
 
 @app.route('/search')
 def search():
-    return render_template('search.html')
+    hotel = session['hotel'] if session['hotel'] != "0" else None
+    fromDate = hotelDB.dateStrToTup(session['fromDate'])
+    toDate = hotelDB.dateStrToTup(session['toDate'])
+    allAvailHotels = json.dumps(hotelDB.getAvailableHotelsFromTo(hotel, fromDate, toDate))
+    return render_template('search.html', allAvailHotels=allAvailHotels)
 
 @app.route('/wishlist')
 def wishlist():
@@ -85,14 +90,14 @@ def reservedRoom():
 @app.route('/api/available')
 def availableRoom():
     hotel = request.args.get('hotel')
-    hotel = str(hotel).strip() if hotel is not None else None
-    fromDate = request.args.get('fromDate').strip('-')
-    toDate = request.args.get('toDate').strip('-')
-    maxPrice = request.args.get('maxPrice')
-    maxPrice = int(maxPrice) if maxPrice is not None else None
+    hotel = hotel if hotel != "0" else None
+    fromDate = hotelDB.dateStrToTup(str(request.args.get('fromDate')))
+    toDate = hotelDB.dateStrToTup(str(request.args.get('toDate')))
+    # maxPrice = request.args.get('maxPrice')
+    # maxPrice = int(maxPrice) if maxPrice is not None else None
     result = hotelDB.getAvailableHotelsFromTo(hotel, fromDate, toDate)
-    if maxPrice is not None:
-        result = list(filter(lambda h : h['price'] <= maxPrice, result))
+    # if maxPrice is not None:
+    #     result = list(filter(lambda h : h['price'] <= maxPrice, result))
     return jsonify(result)
 
 if (__name__ == "__main__"):
