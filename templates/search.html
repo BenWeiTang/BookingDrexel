@@ -215,8 +215,19 @@
                     .append(
                         $("<td>").append(
                             $("<div>").addClass("widget-26-job-starred").append(
-                                (hotel.canWishlist == "True") ? 
-                                $("<p>").text("Yes") : $("<p>").text("No")
+                                // (hotel.canWishlist == "True") ? 
+                                // $("<p>").text("Yes") : $("<p>").text("No"),
+                                $("<form>").attr("action", "/search").attr("method", "post").append(
+                                    $("<input>").attr("type", "hidden").attr("name", "username").attr("value", "{{session['username']}}"),
+                                    $("<input>").attr("type", "hidden").attr("name", "hotel").attr("value", hotel.hotel),
+                                    $("<input>").attr("type", "hidden").attr("name", "fromDate").attr("value", "{{session['fromDate']}}"),
+                                    $("<input>").attr("type", "hidden").attr("name", "toDate").attr("value", "{{session['toDate']}}"),
+                                    (hotel.canWishlist == "True") ? 
+                                        $("<button>").attr("type", "submit").addClass("btn btn-primary").text("Add") :
+                                        ("{{session['username']}}" == "") ?
+                                            $("<p>").addClass("text-muted m-0").text("Sign in to add") : 
+                                            $("<p>").addClass("text-muted m-0").text("Already Added")
+                                )
                             )
                         )
                     ).appendTo($("#search-result-tbody"));

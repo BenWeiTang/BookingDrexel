@@ -61,13 +61,23 @@ def create():
                 render_template('register.html', message=message)
     return render_template('register.html', message=message)
 
-@app.route('/search')
+@app.route('/search', methods=['GET', 'POST'])
 def search():
-    hotel = session['hotel'] if session['hotel'] != "0" else None
-    fromDate = hotelDB.dateStrToTup(session['fromDate'])
-    toDate = hotelDB.dateStrToTup(session['toDate'])
-    allAvailHotels = json.dumps(hotelDB.getAvailableHotelsFromTo(hotel, fromDate, toDate))
-    return render_template('search.html', allAvailHotels=allAvailHotels)
+    if request.method == 'GET':
+        hotel = session['hotel'] if session['hotel'] != "0" else None
+        fromDate = hotelDB.dateStrToTup(session['fromDate'])
+        toDate = hotelDB.dateStrToTup(session['toDate'])
+        allAvailHotels = json.dumps(hotelDB.getAvailableHotelsFromTo(hotel, fromDate, toDate))
+        return render_template('search.html', allAvailHotels=allAvailHotels)
+    else:
+        hotel = request.form['hotel']
+        username = request.form['username']
+        fromStr = request.form['fromDate']
+        toStr = request.form['toDate']
+        fromDate = wishlistDB.dateStrToTup(fromStr)
+        toDate = wishlistDB.dateStrToTup(toStr)
+        wishlistDB.addWishlist(username, hotel, fromDate, toDate)
+        return redirect('/search')
 
 @app.route('/wishlist')
 def wishlist():
