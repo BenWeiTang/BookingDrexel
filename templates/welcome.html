@@ -75,11 +75,11 @@
           </div>
 
           <div class="col-sm">
-            From: <input type="date" name="fromDate" max="2023-09-01" id="from-date" onchange="toDateHandler(event)">
+            From: <input type="date" name="fromDate" max="2023-09-01" id="from-date" onchange="toDateHandler(event)" required>
           </div>
 
           <div class="col-sm">
-            To: <input type="date" name="toDate" min="2022-09-01" max="2023-09-01" id="to-date">
+            To: <input type="date" name="toDate" min="2022-09-01" max="2023-09-01" id="to-date" required>
           </div>
 
           <div class="col-sm">
@@ -101,7 +101,6 @@
           </div>
 
           <div class="col-sm">
-          <!-- <a href="http://127.0.0.1:8080/search" class="btn btn-primary btn-sm float-right col-sm">Search</a> -->
           <button type="submit" class="btn btn-primary btn-sm float-right col-sm">Search</button>
         </div>
         </div>
