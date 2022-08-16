@@ -17,6 +17,10 @@ def index():
 def search():
     return render_template('search.html')
 
+@app.route('/wishlist', methods=['GET', 'POST'])
+def wishlist():
+    return render_template('wishlist.html')
+
 
 @app.route('/welcome', methods=['GET', 'POST'])
 def welcome():
