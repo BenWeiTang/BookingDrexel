@@ -131,7 +131,7 @@
                     .append(
                         $("<td>").append(
                             $("<div>").addClass("widget-26-job-title").append(
-                                $("<a>").text(hotel.hotel)
+                                $("<a>").text(hotel.hotel).attr("href", hotel.url)
                             )
                         )
                     )
@@ -176,7 +176,7 @@
                                         $("<button>").attr("type", "submit").addClass("btn btn-primary").text("Add") :
                                         ("{{session['username']}}" == "") ?
                                             $("<p>").addClass("text-muted m-0").text("Sign in to add") : 
-                                            $("<p>").addClass("text-muted m-0").text("Already Added")
+                                            $("<p>").addClass("text-muted m-0").text("Added")
                                 )
                             )
                         )
