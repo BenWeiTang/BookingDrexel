@@ -215,8 +215,8 @@
                     .append(
                         $("<td>").append(
                             $("<div>").addClass("widget-26-job-starred").append(
-                                $("<a>").attr("href", "#").append(
-                                )
+                                (hotel.canWishlist == "True") ? 
+                                $("<p>").text("Yes") : $("<p>").text("No")
                             )
                         )
                     ).appendTo($("#search-result-tbody"));

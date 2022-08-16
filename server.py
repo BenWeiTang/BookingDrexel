@@ -93,11 +93,16 @@ def availableRoom():
     hotel = hotel if hotel != "0" else None
     fromDate = hotelDB.dateStrToTup(str(request.args.get('fromDate')))
     toDate = hotelDB.dateStrToTup(str(request.args.get('toDate')))
-    # maxPrice = request.args.get('maxPrice')
-    # maxPrice = int(maxPrice) if maxPrice is not None else None
     result = hotelDB.getAvailableHotelsFromTo(hotel, fromDate, toDate)
-    # if maxPrice is not None:
-    #     result = list(filter(lambda h : h['price'] <= maxPrice, result))
+    if not 'username' in session:
+        for r in result:
+            r['canWishlist'] = "False"
+    else:
+        for r in result:
+            if not wishlistDB.hasWishlist(session['username'], hotel, fromDate, toDate):
+                r['canWishlist'] = "True"
+            else:
+                r['canWishlist'] = "False" 
     return jsonify(result)
 
 if (__name__ == "__main__"):

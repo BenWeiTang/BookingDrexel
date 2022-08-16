@@ -70,6 +70,16 @@ class Database:
      
     def hasRoom(self, hotel: str, fromDate: tuple, toDate: tuple) -> bool:
         return self.getEmptyRoomCount(hotel, fromDate, toDate) != 0
+
+    def hasWishlist(self, username: str, hotel: str, fromDate: tuple, toDate: tuple) -> bool:
+        fromStr = self.dateTupToStr(fromDate)
+        toStr = self.dateTupToStr(toDate)
+        instanceNum = self.execute("""SELECT * FROM wishlists
+            WHERE hotel=?
+            AND madeBy=?
+            AND fromDate=?
+            AND toDate=?""", (hotel, username, fromStr, toStr))
+        return len(instanceNum) != 0
     
     def userIntegrityCheck(self, username: str, database: str) -> bool:
         if not self.hasUser(username):
@@ -234,7 +244,7 @@ class WishlistDatabase(Database):
             AND fromDate=? 
             AND toDate=?""", (hotel, username, fromStr, toStr))
         return True
-
+    
     def refreshWishlist(self, username: str) -> None:
         if not self.userIntegrityCheck(username, "Wishlist DB"):
             return False
