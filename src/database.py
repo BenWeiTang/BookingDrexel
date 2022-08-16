@@ -14,7 +14,9 @@ class Database:
             rating REAL NOT NULL,
             location TEXT NOT NULL,
             roomCount INTEGER NOT NULL,
-            price INTEGER NOT NULL)""", tuple())
+            price INTEGER NOT NULL,
+            neighborhood TEXT NOT NULL,
+            img TEXT NOT NULL)""", tuple())
         self.execute("""CREATE TABLE IF NOT EXISTS reservations (
             hotel TEXT NOT NULL,
             reservedBy TEXT NOT NULL,
@@ -119,11 +121,11 @@ class HotelDatabase(Database):
     def __init__(self) -> None:
         super().__init__()
     
-    def addHotel(self, hotel: str, rating: float, location: str, roomCount: int, price: int) -> bool:
+    def addHotel(self, hotel: str, rating: float, location: str, roomCount: int, price: int, neighborhood: str, img: str) -> bool:
         if self.hasHotel(hotel):
             print("[Hotel DB] Hotel {} already exists.".format(hotel))
             return False
-        self.execute("INSERT INTO rooms VALUES (?, ?, ?, ?, ?)", (hotel, rating, location, roomCount, price))
+        self.execute("INSERT INTO rooms VALUES (?, ?, ?, ?, ?, ?, ?)", (hotel, rating, location, roomCount, price, neighborhood, img))
         return True
     
     def removeHotel(self, hotel: str) -> bool:
@@ -136,21 +138,21 @@ class HotelDatabase(Database):
         availableHotels = []
         hotelInfos = None
         if hotel is None:
-            hotelInfos = self.execute("SELECT hotel, rating, location, price FROM rooms", tuple())
+            hotelInfos = self.execute("SELECT hotel, rating, location, price, neighborhood, img FROM rooms", tuple())
         else:
-            hotelInfos = self.execute("SELECT hotel, rating, location, price FROM rooms WHERE hotel=?", (hotel,))
+            hotelInfos = self.execute("SELECT hotel, rating, location, price, neighborhood, img FROM rooms WHERE hotel=?", (hotel,))
         for info in hotelInfos:
             if self.hasRoom(info[0], fromDate, toDate):
-                availableHotels.append({'hotel': info[0], 'rating': info[1], 'location': info[2], 'price': info[3]})
+                availableHotels.append({'hotel': info[0], 'rating': info[1], 'location': info[2], 'price': info[3], 'neighborhood': info[4], 'img': info[5]})
         return availableHotels
     
     def addDefaultHotels(self):
-        self.addHotel('Cornerstone Bed and Breakfast Philadelphia', 4.8, '3300 Baring St, Philadelphia, PA 19104', 3, 199)
-        self.addHotel('Akwaaba Philadelphia', 4.8, '3709 Baring St, Philadelphia, PA 19104', 3, 205)
-        self.addHotel('Sheraton Philadelphia University City Hotel', 4.1, '3549 Chestnut St, Philadelphia, PA 19104', 20, 170)
-        self.addHotel('The Study at University City', 4.6, '20 S 33rd St, Philadelphia, PA 19104', 10, 203)
-        self.addHotel('The Inn at Penn, a Hilton Hotel', 4.5, '3600 Sansom St, Philadelphia, PA 19104', 20, 199)
-        self.addHotel('AKA University City', 4.5, '2929 Walnut St, Philadelphia, PA 19104', 15, 301)
+        self.addHotel('Cornerstone Bed and Breakfast Philadelphia', 4.8, '3300 Baring St, Philadelphia, PA 19104', 3, 199, "Powelton Village", "cornerstone_welcome.jpg")
+        self.addHotel('Akwaaba Philadelphia', 4.8, '3709 Baring St, Philadelphia, PA 19104', 3, 205, "Powelton Village", "Akwaaba_welcome.jpg")
+        self.addHotel('Sheraton Philadelphia University City Hotel', 4.1, '3549 Chestnut St, Philadelphia, PA 19104', 20, 170, "UPenn Campus", "Sheraton-welcome.jpg")
+        self.addHotel('The Study at University City', 4.6, '20 S 33rd St, Philadelphia, PA 19104', 10, 203, "Drexel Campus", "The-Study-welcome.jpg")
+        self.addHotel('The Inn at Penn', 4.5, '3600 Sansom St, Philadelphia, PA 19104', 20, 199, "UPenn Campus", "Inn_at_Penn_welcome.jpg")
+        self.addHotel('AKA University City', 4.5, '2929 Walnut St, Philadelphia, PA 19104', 15, 301, "UPenn Campus", "AKA-welcome.jpg")
     
     def getAllHotelNames(self) -> list:
         result = list(map(lambda h: h[0], self.execute("SELECT hotel FROM rooms", tuple())))
