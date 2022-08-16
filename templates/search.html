@@ -167,29 +167,58 @@
         );
 
         function resultHandler(hotels){
-            for (var hotel in hotels){
+            for (var i = 0; i < hotels.length; i++){
+                hotel = hotels[i];
+                console.log(hotel);
                 $("<tr>").addClass("hotel-card")
                     .append(
                         $("<td>").append(
                             $("<div>").addClass("widget-26-job-emp-img").append(
-                                $("img").attr("src", "{{url_for('static', filename='/img/')}}" + "the_study.jpg")
+                                $("<img>").attr("src", "{{url_for('static', filename='/img/')}}" + hotel.img)
                             )
                         )
                     )
                     .append(
-                        $("<td>")
+                        $("<td>").append(
+                            $("<div>").addClass("widget-26-job-title").append(
+                                $("<a>").text(hotel.hotel)
+                            )
+                        )
                     )
                     .append(
-                        $("<td>")
+                        $("<td>").append(
+                            $("<div>").addClass("widget-26-job-info").append(
+                                $("<p>").addClass("text-muted m-0").text(hotel.neighborhood)
+                            ).append(
+                                $("<p>").addClass("text-muted m-0").text(hotel.location)
+                            )
+                        )
                     )
                     .append(
-                        $("<td>")
+                        $("<td>").append(
+                            $("<div>").addClass("widget-26-job-salary").text("$"+hotel.price+" / night")
+                        ).append(
+                            $("<div>").addClass("widget-26-job-salary").text("From: {{ session['fromDate'] }}")
+                        ).append(
+                            $("<div>").addClass("widget-26-job-salary").text("To: {{ session['toDate'] }}")
+                        )
                     )
                     .append(
-                        $("<td>")
+                        $("<td>").append(
+                            $("<div>").addClass("widget-26-job-category bg-soft-base").append(
+                                $("<i>").addClass("indicator big-base")
+                            ).append(
+                                $("<span>").text(hotel.rating)
+                            )
+                        )
                     )
                     .append(
-                        $("<td>")
+                        $("<td>").append(
+                            $("<div>").addClass("widget-26-job-starred").append(
+                                $("<a>").attr("href", "#").append(
+                                )
+                            )
+                        )
                     ).appendTo($("#search-result-tbody"));
             }
         }
