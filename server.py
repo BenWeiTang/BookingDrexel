@@ -13,15 +13,6 @@ hotelDB.addDefaultHotels()
 def index():
     return redirect('/welcome')
 
-@app.route('/search', methods=['GET', 'POST'])
-def search():
-    return render_template('search.html')
-
-@app.route('/wishlist', methods=['GET', 'POST'])
-def wishlist():
-    return render_template('wishlist.html')
-
-
 @app.route('/welcome', methods=['GET', 'POST'])
 def welcome():
     if request.method == 'POST':
@@ -30,10 +21,7 @@ def welcome():
         session['hotel'] = request.form['hotel']
         session['fromDate'] = request.form['fromDate']
         session['toDate'] = request.form['toDate']
-        if 'username' in session:
-            return redirect('/search')
-        else:
-            return redirect('/login')
+        return redirect('/search')
     else:
         username = session['username'] if 'username' in session else None
         hotel = session['hotel'] if 'hotel' in session else None
@@ -73,8 +61,12 @@ def create():
     return render_template('register.html', message=message)
 
 @app.route('/search')
-def searchWishlist():
+def search():
     return render_template('search.html')
+
+@app.route('/wishlist')
+def wishlist():
+    return render_template('wishlist.html')
 
 @app.route('/logout')
 def logout():
