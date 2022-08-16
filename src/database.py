@@ -72,16 +72,6 @@ class Database:
     def hasRoom(self, hotel: str, fromDate: tuple, toDate: tuple) -> bool:
         return self.getEmptyRoomCount(hotel, fromDate, toDate) != 0
 
-    def hasWishlist(self, username: str, hotel: str, fromDate: tuple, toDate: tuple) -> bool:
-        fromStr = self.dateTupToStr(fromDate)
-        toStr = self.dateTupToStr(toDate)
-        instanceNum = self.execute("""SELECT * FROM wishlists
-            WHERE hotel=?
-            AND madeBy=?
-            AND fromDate=?
-            AND toDate=?""", (hotel, username, fromStr, toStr))
-        return len(instanceNum) != 0
-    
     def userIntegrityCheck(self, username: str, database: str) -> bool:
         if not self.hasUser(username):
             print("[{}] User {} does not exist in the database.".format(database, username))
@@ -270,3 +260,18 @@ class WishlistDatabase(Database):
             price = self.execute("SELECT price FROM rooms WHERE hotel=?", (wl[0],))[0][0]
             result.append({'hotel': wl[0], 'username': wl[1], 'fromDate': wl[2], 'toDate': wl[3], 'available': wl[4], 'price': price})
         return result
+
+    def hasWishlist(self, username: str, hotel: str, fromDate: tuple, toDate: tuple) -> bool:
+        if not self.userIntegrityCheck(username, "Wishlist DB"):
+            return None
+        if not self.hotelIntegrityCheck(hotel, "Wishlist DB"):
+            return None
+        fromStr = self.dateTupToStr(fromDate)
+        toStr = self.dateTupToStr(toDate)
+        instanceNum = self.execute("""SELECT * FROM wishlists
+            WHERE hotel=?
+            AND madeBy=?
+            AND fromDate=?
+            AND toDate=?""", (hotel, username, fromStr, toStr))
+        return len(instanceNum) != 0
+    

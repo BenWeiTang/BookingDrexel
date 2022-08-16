@@ -74,9 +74,13 @@ def search():
         username = request.form['username']
         fromStr = request.form['fromDate']
         toStr = request.form['toDate']
+        toAdd = request.form['toAdd'] == "true"
         fromDate = wishlistDB.dateStrToTup(fromStr)
         toDate = wishlistDB.dateStrToTup(toStr)
-        wishlistDB.addWishlist(username, hotel, fromDate, toDate)
+        if toAdd:
+            wishlistDB.addWishlist(username, hotel, fromDate, toDate)
+        else:
+            wishlistDB.removeWishlist(username, hotel, fromDate, toDate)
         return redirect('/search')
 
 @app.route('/wishlist')
@@ -109,7 +113,7 @@ def availableRoom():
             r['canWishlist'] = "False"
     else:
         for r in result:
-            if not wishlistDB.hasWishlist(session['username'], hotel, fromDate, toDate):
+            if not wishlistDB.hasWishlist(session['username'], r['hotel'], fromDate, toDate):
                 r['canWishlist'] = "True"
             else:
                 r['canWishlist'] = "False" 

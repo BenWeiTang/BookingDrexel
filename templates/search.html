@@ -172,11 +172,12 @@
                                     $("<input>").attr("type", "hidden").attr("name", "hotel").attr("value", hotel.hotel),
                                     $("<input>").attr("type", "hidden").attr("name", "fromDate").attr("value", "{{session['fromDate']}}"),
                                     $("<input>").attr("type", "hidden").attr("name", "toDate").attr("value", "{{session['toDate']}}"),
+                                    $("<input>").attr("type", "hidden").attr("name", "toAdd").attr("value", (hotel.canWishlist == "True")),
                                     (hotel.canWishlist == "True") ? 
                                         $("<button>").attr("type", "submit").addClass("btn btn-primary").text("Add") :
                                         ("{{session['username']}}" == "") ?
                                             $("<p>").addClass("text-muted m-0").text("Sign in to add") : 
-                                            $("<p>").addClass("text-muted m-0").text("Added")
+                                            $("<button>").attr("type", "submit").addClass("btn btn-danger").text("Remove")
                                 )
                             )
                         )
