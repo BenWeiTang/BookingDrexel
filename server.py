@@ -7,6 +7,7 @@ userDB = UserDatabase()
 hotelDB = HotelDatabase()
 reservationDB = ReservationDatabase()
 wishlistDB = WishlistDatabase()
+hotelDB.addDefaultHotels()
 
 @app.route('/')
 def index():
@@ -35,7 +36,8 @@ def welcome():
         hotel = session['hotel'] if 'hotel' in session else None
         fromDate = session['fromDate'] if 'fromDate' in session else None
         toDate = session['toDate'] if 'toDate' in session else None
-        return render_template('welcome.html', username=username, hotel=hotel, fromDate=fromDate, toDate=toDate)
+        allHotels = hotelDB.getAllHotelNames()
+        return render_template('welcome.html', allHotels= allHotels, username=username, hotel=hotel, fromDate=fromDate, toDate=toDate)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -47,8 +49,9 @@ def login():
             userInfo = userDB.getUserInfo(username)
             if userInfo is not None and typedPassword == userInfo['password']:
                 session['username'] = userInfo['username']
+                return redirect('/welcome')
             else:
-                message = 'User is NOT in database.'
+                message = 'Username or password incorrect.'
     return render_template('login.html', message=message)
 
 @app.route('/register', methods=['GET', 'POST'])
