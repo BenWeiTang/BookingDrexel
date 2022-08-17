@@ -124,5 +124,11 @@ def availableRoom():
                 r['canWishlist'] = "False" 
     return jsonify(result)
 
+@app.route('/api/wishlist')
+def getUserWishilist():
+    username = request.args.get('username')
+    wishlists = wishlistDB.getWishList(username)
+    return jsonify(wishlists)
+
 if (__name__ == "__main__"):
     app.run(host='127.0.0.1', port=8080, debug=True)
