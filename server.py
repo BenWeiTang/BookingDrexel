@@ -87,10 +87,15 @@ def search():
 def wishlist():
     if 'username' not in session:
         return redirect('/login')
-    if request.method == 'GET':
-        return render_template('wishlist.html')
-    else:
-        return render_template('wishlist.html')
+    if request.method == 'POST':
+        username = request.form['username']
+        hotel = request.form['hotel']
+        fromStr = request.form['fromDate']
+        toStr = request.form['toDate']
+        fromDate = wishlistDB.dateStrToTup(fromStr)
+        toDate = wishlistDB.dateStrToTup(toStr)
+        wishlistDB.removeWishlist(username, hotel, fromDate, toDate)
+    return render_template('wishlist.html')
 
 @app.route('/logout')
 def logout():
