@@ -83,9 +83,14 @@ def search():
             wishlistDB.removeWishlist(username, hotel, fromDate, toDate)
         return redirect('/search')
 
-@app.route('/wishlist')
+@app.route('/wishlist', methods=['GET', 'POST'])
 def wishlist():
-    return render_template('wishlist.html')
+    if 'username' not in session:
+        return redirect('/login')
+    if request.method == 'GET':
+        return render_template('wishlist.html')
+    else:
+        return render_template('wishlist.html')
 
 @app.route('/logout')
 def logout():
