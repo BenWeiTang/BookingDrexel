@@ -254,11 +254,14 @@ class WishlistDatabase(Database):
         if not self.userIntegrityCheck(username, "Wishlist DB"):
             return False
         self.refreshWishlist(username)
-        allWishlists = self.execute("SELECT * FROM wishlists WHERE madeBy=?", (username,))
+        allWishlists = self.execute("SELECT hotel, fromDate, toDate FROM wishlists WHERE madeBy=?", (username,))
         result = list()
         for wl in allWishlists:
-            price = self.execute("SELECT price FROM rooms WHERE hotel=?", (wl[0],))[0][0]
-            result.append({'hotel': wl[0], 'username': wl[1], 'fromDate': wl[2], 'toDate': wl[3], 'available': wl[4], 'price': price})
+            hotel = wl[0]
+            fromStr = wl[1]
+            toStr = wl[2]
+            rating, location, price, neighborhood, img, url = self.execute("SELECT rating, location, price, neighborhood, img, url FROM rooms WHERE hotel=?", (hotel,))[0]
+            result.append({'hotel': hotel, 'fromDate': fromStr, 'toDate': toStr, 'rating': rating, 'location': location, 'price': price, 'neighborhood': neighborhood, 'img': img, 'url': url})
         return result
 
     def hasWishlist(self, username: str, hotel: str, fromDate: tuple, toDate: tuple) -> bool:

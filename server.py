@@ -83,8 +83,18 @@ def search():
             wishlistDB.removeWishlist(username, hotel, fromDate, toDate)
         return redirect('/search')
 
-@app.route('/wishlist')
+@app.route('/wishlist', methods=['GET', 'POST'])
 def wishlist():
+    if 'username' not in session:
+        return redirect('/login')
+    if request.method == 'POST':
+        username = request.form['username']
+        hotel = request.form['hotel']
+        fromStr = request.form['fromDate']
+        toStr = request.form['toDate']
+        fromDate = wishlistDB.dateStrToTup(fromStr)
+        toDate = wishlistDB.dateStrToTup(toStr)
+        wishlistDB.removeWishlist(username, hotel, fromDate, toDate)
     return render_template('wishlist.html')
 
 @app.route('/logout')
@@ -118,6 +128,12 @@ def availableRoom():
             else:
                 r['canWishlist'] = "False" 
     return jsonify(result)
+
+@app.route('/api/wishlist')
+def getUserWishilist():
+    username = request.args.get('username')
+    wishlists = wishlistDB.getWishList(username)
+    return jsonify(wishlists)
 
 if (__name__ == "__main__"):
     app.run(host='127.0.0.1', port=8080, debug=True)
