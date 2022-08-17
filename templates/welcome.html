@@ -73,11 +73,19 @@
           </div>
 
           <div class="col-sm">
+            {% if session['fromDate'] %}
+            From: <input type="date" name="fromDate" max="2023-09-01" id="from-date" value="{{session['fromDate']}}" onchange="toDateHandler(event)" required>
+            {% else %}
             From: <input type="date" name="fromDate" max="2023-09-01" id="from-date" onchange="toDateHandler(event)" required>
+            {% endif %}
           </div>
 
           <div class="col-sm">
-            To: <input type="date" name="toDate" min="2022-09-01" max="2023-09-01" id="to-date" required>
+            {% if session['toDate'] %}
+            To: <input type="date" name="toDate" max="2023-09-01" id="to-date" value="{{session['toDate']}}" required>
+            {% else %}
+            To: <input type="date" name="toDate" max="2023-09-01" id="to-date" required>
+            {% endif  %}
           </div>
 
           <div class="col-sm">
