@@ -117,53 +117,36 @@
             for (var i = 0; i < hotels.length; i++){
                 hotel = hotels[i];
                 console.log(hotel);
-                $("<tr>").addClass("hotel-card")
-                    .append(
+                $("<tr>").addClass("hotel-card").append(
                         $("<td>").append(
                             $("<div>").addClass("widget-26-job-emp-img").append(
                                 $("<img>").attr("src", "{{url_for('static', filename='/img/')}}" + hotel.img)
                             )
-                        )
-                    )
-                    .append(
+                        ),
                         $("<td>").append(
                             $("<div>").addClass("widget-26-job-title").append(
                                 $("<a>").text(hotel.hotel).attr("href", hotel.url)
                             )
-                        )
-                    )
-                    .append(
+                        ),
                         $("<td>").append(
                             $("<div>").addClass("widget-26-job-info").append(
-                                $("<p>").addClass("text-muted m-0").text(hotel.neighborhood)
-                            ).append(
+                                $("<p>").addClass("text-muted m-0").text(hotel.neighborhood),
                                 $("<p>").addClass("text-muted m-0").text(hotel.location)
                             )
-                        )
-                    )
-                    .append(
+                        ),
                         $("<td>").append(
-                            $("<div>").addClass("widget-26-job-salary").text("$"+hotel.price+" / night")
-                        ).append(
-                            $("<div>").addClass("widget-26-job-salary").text("From: {{ session['fromDate'] }}")
-                        ).append(
+                            $("<div>").addClass("widget-26-job-salary").text("$"+hotel.price+" / night"),
+                            $("<div>").addClass("widget-26-job-salary").text("From: {{ session['fromDate'] }}"),
                             $("<div>").addClass("widget-26-job-salary").text("To: {{ session['toDate'] }}")
-                        )
-                    )
-                    .append(
+                        ),
                         $("<td>").append(
                             $("<div>").addClass("widget-26-job-category bg-soft-base").append(
-                                $("<i>").addClass("indicator big-base")
-                            ).append(
+                                $("<i>").addClass("indicator big-base"),
                                 $("<span>").text(hotel.rating)
                             )
-                        )
-                    )
-                    .append(
+                        ),
                         $("<td>").append(
                             $("<div>").addClass("widget-26-job-starred").append(
-                                // (hotel.canWishlist == "True") ? 
-                                // $("<p>").text("Yes") : $("<p>").text("No"),
                                 $("<form>").attr("action", "/search").attr("method", "post").append(
                                     $("<input>").attr("type", "hidden").attr("name", "username").attr("value", "{{session['username']}}"),
                                     $("<input>").attr("type", "hidden").attr("name", "hotel").attr("value", hotel.hotel),
