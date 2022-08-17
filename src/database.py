@@ -148,12 +148,12 @@ class HotelDatabase(Database):
         return availableHotels
     
     def addDefaultHotels(self):
-        self.addHotel('Cornerstone Bed and Breakfast Philadelphia', 4.8, '3300 Baring St, Philadelphia, PA 19104', 3, 199, "Powelton Village", "cornerstone_welcome.jpg", "https://www.cornerstonebandb.com/?utm_source=google&utm_medium=GMB")
-        self.addHotel('Akwaaba Philadelphia', 4.8, '3709 Baring St, Philadelphia, PA 19104', 3, 205, "Powelton Village", "Akwaaba_welcome.jpg", "https://www.akwaaba.com/akwaaba-philadelphia")
-        self.addHotel('Sheraton Philadelphia University City Hotel', 4.1, '3549 Chestnut St, Philadelphia, PA 19104', 20, 170, "UPenn Campus", "Sheraton-welcome.jpg", "https://www.marriott.com/en-us/hotels/phlus-sheraton-philadelphia-university-city-hotel")
-        self.addHotel('The Study at University City', 4.6, '20 S 33rd St, Philadelphia, PA 19104', 10, 203, "Drexel Campus", "The-Study-welcome.jpg", "https://www.thestudyatuniversitycity.com")
-        self.addHotel('The Inn at Penn', 4.5, '3600 Sansom St, Philadelphia, PA 19104', 20, 199, "UPenn Campus", "Inn_at_Penn_welcome.jpg", "https://www.hilton.com/en/hotels/phlidhh-the-inn-at-penn")
-        self.addHotel('AKA University City', 4.5, '2929 Walnut St, Philadelphia, PA 19104', 15, 301, "UPenn Campus", "AKA-welcome.jpg", "https://www.stayaka.com/aka-university-city")
+        self.addHotel('Cornerstone Bed and Breakfast Philadelphia', 4.8, '3300 Baring St, Philadelphia, PA 19104', 3, 199, "Powelton Village", "Cornerstone-interior.jpg", "https://www.cornerstonebandb.com/?utm_source=google&utm_medium=GMB")
+        self.addHotel('Akwaaba Philadelphia', 4.8, '3709 Baring St, Philadelphia, PA 19104', 3, 205, "Powelton Village", "Akwaaba-interior.jpg", "https://www.akwaaba.com/akwaaba-philadelphia")
+        self.addHotel('Sheraton Philadelphia University City Hotel', 4.1, '3549 Chestnut St, Philadelphia, PA 19104', 20, 170, "UPenn Campus", "sheraton-interior.jpg", "https://www.marriott.com/en-us/hotels/phlus-sheraton-philadelphia-university-city-hotel")
+        self.addHotel('The Study at University City', 4.6, '20 S 33rd St, Philadelphia, PA 19104', 10, 203, "Drexel Campus", "the-study-interior.jpg", "https://www.thestudyatuniversitycity.com")
+        self.addHotel('The Inn at Penn', 4.5, '3600 Sansom St, Philadelphia, PA 19104', 20, 199, "UPenn Campus", "Inn-interior.jpg", "https://www.hilton.com/en/hotels/phlidhh-the-inn-at-penn")
+        self.addHotel('AKA University City', 4.5, '2929 Walnut St, Philadelphia, PA 19104', 15, 301, "UPenn Campus", "AKA-interior.jpg", "https://www.stayaka.com/aka-university-city")
     
     def getAllHotelNames(self) -> list:
         result = list(map(lambda h: h[0], self.execute("SELECT hotel FROM rooms", tuple())))
