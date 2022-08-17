@@ -260,7 +260,7 @@ class WishlistDatabase(Database):
             hotel = wl[0]
             fromStr = wl[1]
             toStr = wl[2]
-            rating, location, price, neighborhood, img, url = self.execute("SELECT rating, location, price, neighborhood, img, url FROM rooms WHERE hotel=?", (wl[0],))
+            rating, location, price, neighborhood, img, url = self.execute("SELECT rating, location, price, neighborhood, img, url FROM rooms WHERE hotel=?", (hotel,))[0]
             result.append({'hotel': hotel, 'fromDate': fromStr, 'toDate': toStr, 'rating': rating, 'location': location, 'price': price, 'neighborhood': neighborhood, 'img': img, 'url': url})
         return result
 
