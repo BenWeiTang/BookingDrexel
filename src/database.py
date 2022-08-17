@@ -157,12 +157,12 @@ class HotelDatabase(Database):
         return availableHotels
     
     def addDefaultHotels(self):
-        self.addHotel('Cornerstone Bed and Breakfast Philadelphia', 4.8, '3300 Baring St, Philadelphia, PA 19104', 3, 199, "Powelton Village", "cornerstone_welcome.jpg")
-        self.addHotel('Akwaaba Philadelphia', 4.8, '3709 Baring St, Philadelphia, PA 19104', 3, 205, "Powelton Village", "Akwaaba_welcome.jpg")
-        self.addHotel('Sheraton Philadelphia University City Hotel', 4.1, '3549 Chestnut St, Philadelphia, PA 19104', 20, 170, "UPenn Campus", "Sheraton-welcome.jpg")
-        self.addHotel('The Study at University City', 4.6, '20 S 33rd St, Philadelphia, PA 19104', 10, 203, "Drexel Campus", "The-Study-welcome.jpg")
-        self.addHotel('The Inn at Penn', 4.5, '3600 Sansom St, Philadelphia, PA 19104', 20, 199, "UPenn Campus", "Inn_at_Penn_welcome.jpg")
-        self.addHotel('AKA University City', 4.5, '2929 Walnut St, Philadelphia, PA 19104', 15, 301, "UPenn Campus", "AKA-welcome.jpg")
+        self.addHotel('Cornerstone Bed and Breakfast Philadelphia', 4.8, '3300 Baring St, Philadelphia, PA 19104', 3, 199, "Powelton Village", "Cornerstone-interior.jpg")
+        self.addHotel('Akwaaba Philadelphia', 4.8, '3709 Baring St, Philadelphia, PA 19104', 3, 205, "Powelton Village", "Akwaaba-interior.jpg")
+        self.addHotel('Sheraton Philadelphia University City Hotel', 4.1, '3549 Chestnut St, Philadelphia, PA 19104', 20, 170, "UPenn Campus", "sheraton-interior.jpg")
+        self.addHotel('The Study at University City', 4.6, '20 S 33rd St, Philadelphia, PA 19104', 10, 203, "Drexel Campus", "the-study-interior.jpg")
+        self.addHotel('The Inn at Penn', 4.5, '3600 Sansom St, Philadelphia, PA 19104', 20, 199, "UPenn Campus", "Inn-interior.jpg")
+        self.addHotel('AKA University City', 4.5, '2929 Walnut St, Philadelphia, PA 19104', 15, 301, "UPenn Campus", "AKA-interior.jpg")
     
     def getAllHotelNames(self) -> list:
         result = list(map(lambda h: h[0], self.execute("SELECT hotel FROM rooms", tuple())))

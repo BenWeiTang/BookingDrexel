@@ -45,6 +45,15 @@ p {
     background-color: yellow;
 }
 
+.carousel-caption {
+	color: white;
+	text-shadow: 2px 2px black;
+}
+
+p.carousel-caption {
+	font-size: 40px;
+}
+
 .btn {
 	width: 100px;
 	height: 25px;

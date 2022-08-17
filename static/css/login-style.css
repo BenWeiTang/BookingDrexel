@@ -35,7 +35,7 @@ p {
 	width:300px;
 	height:300px;
 }
-.login h2 {text-shadow: 0 0 10px rgba(0,0,0,0.3); letter-spacing:1px;}
+.login h2 {letter-spacing:1px;}
 
 input { 
 	width: 100%; 
