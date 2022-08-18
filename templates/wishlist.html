@@ -11,25 +11,25 @@
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg fixed-top bg-primary navbar-dark">
       <div class="container">
-        <a class="navbar-brand" href="http://127.0.0.1:8080/welcome">Booking.drexel</a>
+        <a class="navbar-brand" href={{ url_for('welcome') }}>Booking.drexel</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav ms-auto align-items-center">
             <li class="nav-item">
-              <a class="nav-link mx-2" href="http://127.0.0.1:8080/welcome#about"><i class="fas fa-plus-circle pe-2"></i>About us</a>
+              <a class="nav-link mx-2" href={{ url_for('welcome', _anchor='about') }}><i class="fas fa-plus-circle pe-2"></i>About us</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link mx-2" href="http://127.0.0.1:8080/wishlist"><i class="fas fa-heart pe-2"></i>Wishlist</a>
+              <a class="nav-link mx-2" href={{ url_for('wishlist') }}><i class="fas fa-heart pe-2"></i>Wishlist</a>
             </li>
             {% if session['username'] %}
             <li class="nav-item ms-3">
-              <a class="btn btn-warning btn-sm my-2 my-sm-0" href="http://127.0.0.1:8080/logout">Log out</a>
+              <a class="btn btn-warning btn-sm my-2 my-sm-0" href={{ url_for('logout') }}>Log out</a>
             </li>
             {% else %}
             <li class="nav-item ms-3">
-              <a class="btn btn-warning btn-sm my-2 my-sm-0" href="http://127.0.0.1:8080/login">Sign in</a>
+              <a class="btn btn-warning btn-sm my-2 my-sm-0" href={{ url_for('login') }}>Sign in</a>
             </li>
             {% endif %}
           </ul>
