@@ -54,10 +54,11 @@
                                               <div class="result-actions">
                                                   <div class="result-sorting">
                                                       <span>Sort By:</span>
-                                                      <select class="form-control border-0" id="exampleOption">
-                                                          <option value="1">Relevance</option>
-                                                          <option value="2">Names (A-Z)</option>
-                                                          <option value="3">Names (Z-A)</option>
+                                                      <select class="form-control border-0" id="exampleOption" onchange="sortHandler(this.selectedIndex); buildHotelCards();">
+                                                          <option value="0">Price High to Low</option>
+                                                          <option value="1">Price Low to High</option>
+                                                          <option value="2">Rating High to Low</option>
+                                                          <option value="3">Rating Low to High</option>
                                                       </select>
                                                   </div>
                                               </div>
@@ -108,15 +109,49 @@
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.5/dist/umd/popper.min.js" integrity="sha384-Xe+8cL9oJa6tN/veChSP7q+mnSPaj5Bcu9mPX5F5xIGE0DVittaqT5lorf0EI7Vk" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.min.js" integrity="sha384-ODmDIVzN+pFdexxHEHFBQH3/9/vQ9uori45z4JjnFsRydbmQbmL5t1tQ0culUzyK" crossorigin="anonymous"></script>
     <script>
+        var wishlistCache = null;
         $.get("/api/wishlist",
             {'username': "{{ session['username'] }}"},
-            (wishlists) => {wishlistHandler(wishlists);}
+            (wishlists) => {arrayCacher(wishlists); sortHandler(0); buildHotelCards();}
         );
 
-        function wishlistHandler(wishlists){
-            for (var i = 0; i < wishlists.length; i++)
+        function arrayCacher(wishlists){
+            wishlistCache = new Array(wishlists.length);
+            for (var i = 0; i < wishlistCache.length; i++){
+                wishlistCache[i] = wishlists[i];
+            } 
+        }
+
+        function sortHandler(index){
+            switch (index) {
+                // Price High to Low
+                case 0:
+                    wishlistCache.sort((a, b) => b.price - a.price);
+                    break; 
+                // Price Low to High
+                case 1:
+                    wishlistCache.sort((a, b) => a.price - b.price);
+                    break;
+                // Rating High to Low
+                case 2:
+                    wishlistCache.sort((a, b) => b.rating - a.rating);
+                    break;
+                case 3:
+                // Rating Low to High
+                    wishlistCache.sort((a, b) => a.rating - b.rating);
+                    break;
+                // Price High to Low
+                default:
+                    wishlistCache.sort((a, b) => b.price - a.price);
+                    break;
+            }
+        }
+
+        function buildHotelCards(){
+            $('.hotel-card').remove();
+            for (var i = 0; i < wishlistCache.length; i++)
             {
-                hotel = wishlists[i];
+                hotel = wishlistCache[i];
                 console.log(hotel);
                 $("<tr>").addClass("hotel-card")
                     .append(
