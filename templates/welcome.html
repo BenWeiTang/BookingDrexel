@@ -18,7 +18,7 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav ms-auto align-items-center">
             <li class="nav-item">
-              <a class="nav-link mx-2" href= {{ url_for('welcome') }}><i class="fas fa-plus-circle pe-2"></i>About us</a>
+              <a class="nav-link mx-2" href={{ url_for('welcome', _anchor='about') }}><i class="fas fa-plus-circle pe-2"></i>About us</a>
             </li>
             <li class="nav-item">
               <a class="nav-link mx-2" href={{ url_for('wishlist') }}><i class="fas fa-heart pe-2"></i>Wishlist</a>
