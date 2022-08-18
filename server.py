@@ -47,7 +47,7 @@ def login():
     return render_template('login.html', message=message)
 
 @app.route('/register', methods=['GET', 'POST'])
-def create():
+def register():
     message = None
     if request.method == 'POST':
         username = str(request.form['username']).strip()
