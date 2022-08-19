@@ -127,6 +127,9 @@
 
         function buildHotelCards(){
             $(".hotel-card").remove();
+            if (hotelCache.length == 0){
+                $("<div>").text("No result. Try a different hotel or date range.").css("text-align", "center").appendTo($(".result-body"))
+            }
             for (var i = 0; i < hotelCache.length; i++){
                 hotel = hotelCache[i];
                 $("<tr>").addClass("hotel-card").append(
