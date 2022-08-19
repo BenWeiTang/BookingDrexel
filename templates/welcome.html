@@ -59,9 +59,9 @@
 
         <!--First Row-->
         <div class="row">
-          <div class="col-sm">
-            <select class="browser-default custom-select mb-4" id="select" name="hotel" style="width:100%;max-width:90%;">
-              <option value="0">Where do you want to go?</option>
+          <div class="col-sm-3">
+            Where:<select class="browser-default custom-select mb-4" id="select" name="hotel" style="width:100%;max-width:90%;">
+              <option value="0">Anywhere</option>
               {% for hName in allHotels %}
               {% if hName==hotel %}
               <option value="{{ hName }}" selected>{{ hName }}</option>
@@ -107,8 +107,8 @@
           </div>
 
           <div class="col-sm">
-          <button type="submit" class="btn btn-primary btn-sm float-right col-sm">Search</button>
-        </div>
+            <button type="submit" class="btn btn-primary btn-sm float-right col-sm">Search</button>
+          </div>
         </div>
       </form>
     </div>
