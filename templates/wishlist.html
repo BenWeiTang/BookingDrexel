@@ -126,6 +126,9 @@
 
         function buildHotelCards(){
             $('.hotel-card').remove();
+            if (wishlistCache.length == 0){
+                $("<div>").text("Your wishlist is empty.").css("text-align", "center").appendTo($(".result-body"))
+            }
             for (var i = 0; i < wishlistCache.length; i++)
             {
                 hotel = wishlistCache[i];
@@ -166,7 +169,7 @@
                                     $("<input>").attr("type", "hidden").attr("name", "hotel").attr("value", hotel.hotel),
                                     $("<input>").attr("type", "hidden").attr("name", "fromDate").attr("value", hotel.fromDate),
                                     $("<input>").attr("type", "hidden").attr("name", "toDate").attr("value", hotel.toDate),
-                                    $("<button>").attr("type", "submit").addClass("btn btn-danger").text("Remove")
+                                    $("<button>").attr("type", "submit").addClass("btn btn-danger").attr("id", "add-remove").text("Remove")
                                 )
                             )
                         )

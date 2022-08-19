@@ -65,9 +65,9 @@
 
         <!--First Row-->
         <div class="row">
-          <div class="col-sm">
-            <select class="browser-default custom-select mb-4" id="select" name="hotel" style="width:100%;max-width:90%;">
-              <option value="0">Where do you want to go?</option>
+          <div class="col-sm-3">
+            Where:<select class="browser-default custom-select mb-4" id="select" name="hotel" style="width:100%;max-width:90%;">
+              <option value="0">Anywhere</option>
               {% for hName in allHotels %}
               {% if hName==hotel %}
               <option value="{{ hName }}" selected>{{ hName }}</option>
@@ -113,8 +113,8 @@
           </div>
 
           <div class="col-sm">
-          <button type="submit" class="btn btn-primary btn-sm float-right col-sm">Search</button>
-        </div>
+            <button type="submit" class="btn btn-primary btn-sm float-right col-sm">Search</button>
+          </div>
         </div>
       </form>
     </div>
@@ -199,8 +199,7 @@
                     for the duration of their visit at Drexel University.
                 </p>
                 <p class="lead mb-0">
-                  To use our website, simply choose which hotels you're likely to say, or AKA University City to get
-                  general recommendations.
+                  To use our website, simply choose which hotels you're likely to stay.
                 </p>
                 <p class="lead mb-0">
                   Once you see the search results, if you enter, you can wishlist these options so that you can view

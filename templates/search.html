@@ -127,6 +127,9 @@
 
         function buildHotelCards(){
             $(".hotel-card").remove();
+            if (hotelCache.length == 0){
+                $("<div>").text("No result. Try a different hotel or date range.").css("text-align", "center").appendTo($(".result-body"))
+            }
             for (var i = 0; i < hotelCache.length; i++){
                 hotel = hotelCache[i];
                 $("<tr>").addClass("hotel-card").append(
@@ -166,10 +169,10 @@
                                     $("<input>").attr("type", "hidden").attr("name", "toDate").attr("value", "{{session['toDate']}}"),
                                     $("<input>").attr("type", "hidden").attr("name", "toAdd").attr("value", (hotel.canWishlist == "True")),
                                     (hotel.canWishlist == "True") ? 
-                                        $("<button>").attr("type", "submit").addClass("btn btn-primary").text("Add") :
+                                        $("<button>").attr("type", "submit").addClass("btn btn-primary").attr("id", "add-remove").text("Add") :
                                         ("{{session['username']}}" == "") ?
                                             $("<p>").addClass("text-muted m-0").text("Sign in to add") : 
-                                            $("<button>").attr("type", "submit").addClass("btn btn-danger").text("Remove")
+                                            $("<button>").attr("type", "submit").addClass("btn btn-danger").attr("id", "add-remove").text("Remove")
                                 )
                             )
                         )

@@ -263,3 +263,7 @@ body{
     border: 1px solid #e6e4e9;
     border-radius: 8px;
 }
+
+#add-remove {
+    width: 100px;
+}
