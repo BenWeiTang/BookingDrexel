@@ -242,6 +242,11 @@ body{
 }
 }
 
+.btn {
+	width: 100px;
+	height: 25px;
+}
+
 .card-margin {
     margin-bottom: 1.875rem;
 }

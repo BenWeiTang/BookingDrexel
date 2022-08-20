@@ -9,17 +9,13 @@
   </head>
   <body>
     <!-- 
-      Header for Wishlist and Search Page, 
-      Sign in button inconsistency in search and wishlist
-      Where option col size
-      windown resize button
       Drexel color code
      -->
     <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg fixed-top bg-primary navbar-dark">
+    <nav class="navbar navbar-expand-lg fixed-top navbar-dark" style="background-color: #07294D">
       <div class="container">
-        <a class="navbar-brand" href="#">Booking.drexel</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <a class="navbar-brand" href={{ url_for('welcome') }}>Booking.drexel</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
@@ -44,7 +40,7 @@
       </div>
     </nav>
 
-    <header class="masthead text-left bg-primary">
+    <header class="masthead text-left" style="background-color: #07294D">
       <div class="container d-flex align-items-left flex-column">
           <!-- Masthead Heading -->
           <h1 class="masthead-heading mb-0">Your guide to your stay in Drexel University</h1>
@@ -65,9 +61,9 @@
 
         <!--First Row-->
         <div class="row">
-          <div class="col-sm-3">
-            Where:<select class="browser-default custom-select mb-4" id="select" name="hotel" style="width:100%;max-width:90%;">
-              <option value="0">Anywhere</option>
+          <div class="col-sm-2">
+            <select class="browser-default custom-select mb-4" id="select" name="hotel" style="width:100%;max-width:90%;">
+              <option value="0">Stay Anywhere</option>
               {% for hName in allHotels %}
               {% if hName==hotel %}
               <option value="{{ hName }}" selected>{{ hName }}</option>
@@ -208,7 +204,7 @@
     </div>
 </footer>
 
-  <div class="copyright py-4 text-center text-white">
+  <div class="copyright py-4 text-center text-white bg-primary">
     <div class="container"><small>Copyright &copy; HungDo&BenTang 2022</small></div>
   </div>
 
